@@ -1,0 +1,24 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - npm install -g @angular/cli
+  pre_build:
+    commands:
+      - npm install --legacy-peer-deps
+  build:
+    commands:
+      - ng build --configuration production
+  post_build:
+    commands:
+      - cp appspec.yml dist/template/browser/
+      - cp -r scripts dist/template/browser/
+artifacts:
+  base-directory: dist/template/browser
+  files:
+    - '**/*'
+cache:
+  paths:
+    - 'node_modules/**/*'
