@@ -1,0 +1,140 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <div class="page-title d-flex align-items-center gap-2">
+      <h4 class="mb-0"> Scan & Validate - 
+        <span class="text-muted ms-2 text-dark p-1 rounded bg-gray-100">
+          {{fileName}}
+        </span>
+      </h4>
+    </div>
+    <button type="button" class="close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body-table">
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <tbody>
+          <tr *ngFor="let step of steps; let i = index">
+            <ng-container *ngIf="(i > 0 && i < 3) || (i === 3 && showStep4)">
+              <td class="fw-bold">Step {{ i }}</td>
+              <td>{{ step.description }}</td>
+              <td class="text-center">
+                <ng-container [ngSwitch]="step.status">
+                  <i
+                    *ngSwitchCase="'success'"
+                    class="ti ti-circle-check text-success"
+                  ></i>
+                  <i
+                    *ngSwitchCase="'fail'"
+                    class="ti ti-xbox-x text-danger"
+                  ></i>
+                  <i
+                    *ngSwitchCase="'loading'"
+                    class="ti ti-loader-2 text-primary ti-spin"
+                  ></i>
+                </ng-container>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal-footer d-flex justify-content-center flex-wrap gap-3">
+    <button
+      *ngIf="!step1to3Success"
+      class="btn btn-outline-primary"
+      [disabled]="validating"
+      (click)="validateAllSteps()"
+    >
+      <ng-container *ngIf="!validating; else loadingSteps1to3">
+        Run Step 1–2
+      </ng-container>
+      <ng-template #loadingSteps1to3>
+        <span class="spinner-border spinner-border-sm"></span> Scanning...
+      </ng-template>
+    </button>
+    <button
+      *ngIf="step1to3Success && steps[3].status !== 'fail' && steps[3].status !== 'success'"
+      class="btn btn-outline-primary"
+      [disabled]="steps[3].status === 'loading'"
+      (click)="runValidation(3)"
+    >
+      <ng-container *ngIf="steps[3].status !== 'loading'; else loadingStep4">
+        Run Step 3
+      </ng-container>
+      <ng-template #loadingStep4>
+        <span class="spinner-border spinner-border-sm"></span> Scanning...
+      </ng-template>
+    </button>
+    <button
+      *ngIf="allScanned && allValid && !uploading"
+      type="button"
+      class="btn btn-success"
+      (click)="updateData()"
+    >
+      Upload File
+    </button>
+    <button
+      *ngIf="uploading"
+      class="btn btn-success btn-sm"
+      type="button"
+      [disabled]="true"
+    >
+      <span
+        class="spinner-border"
+        style="width: 1rem; height: 1rem"
+        role="status"
+      ></span>
+      &nbsp;Uploading...[Please wait]
+    </button>
+    <button
+      *ngIf="showRejectButton && !rejecting"
+      type="button"
+      class="btn btn-danger"
+      (click)="rejectedData()"
+    >
+      {{step1to3Success ? 'Send for Reverification' : 'Reject with Reason'}}
+    </button>
+    <button
+      class="btn btn-danger btn-sm"
+      type="button"
+      *ngIf="rejecting"
+      [disabled]="true"
+    >
+      <span
+        class="spinner-border"
+        style="width: 1rem; height: 1rem"
+        role="status"
+      ></span>
+      &nbsp;Rejecting...[Please wait]
+    </button>
+  </div>
+</div>
+
+
+<ng-template #reasonModal let-modal>
+  <div class="modal-content">
+    <div class="modal-header py-2">
+      <h6 class="mb-0">
+        Provide Rejection Reason
+      </h6>
+    </div>
+    <div class="modal-body">
+      <textarea
+      [(ngModel)]="rejectionReason"
+      rows="4"
+      class="form-control border-secondary mb-3"
+      placeholder="Enter reason here..."
+    ></textarea>
+      <div class="d-grid gap-2">
+        <button class="btn btn-sm btn-danger" (click)="submitReason(modal)">
+          Add Reason & Reject
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

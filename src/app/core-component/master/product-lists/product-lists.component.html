@@ -1,0 +1,86 @@
+<div
+  class="card table-list-card"
+  style="
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: -15px -15px 10px -15px;
+  "
+>
+  <div
+    class="card-header d-flex align-items-center justify-content-between flex-wrap p-2"
+    style="gap: 0.5rem; row-gap: 0.5rem; min-height: auto"
+  >
+    <div class="search-set d-flex align-items-center" style="gap: 1.5rem">
+      <h6
+        class="mb-0"
+        style="white-space: nowrap; font-size: 18px; font-weight: 600"
+      >
+        Products Lists
+        <span
+          *ngIf="!loading && !isSearching"
+          class="badge rounded-pill badge-sm bg-primary ms-2"
+        >
+          {{ totalData }}
+        </span>
+        <span
+          class="spinner-border text-primary me-1 ms-2"
+          style="width: 1rem; height: 1rem"
+          *ngIf="loading || isSearching"
+          role="status"
+        ></span>
+      </h6>
+      <div
+        style="border-left: 2px solid #e0e0e0; height: 28px; margin: 0 1rem"
+      ></div>
+      <div class="input-group input-group-sm">
+        <div class="search-input d-flex align-items-center">
+          <a class="btn btn-searchset me-1">
+            <i class="ti ti-search fs-14 feather-search"></i>
+          </a>
+          <div class="dataTables_filter mb-0">
+            <input
+              type="search"
+              class="form-control form-control"
+              [class.search-active]="searchTerm"
+              placeholder="Search"
+              (input)="onSearchChange($event)"
+              [value]="searchTerm"
+              style="width: 250px;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="d-flex my-xl-auto right-content align-items-center flex-wrap row-gap-3"
+    >
+      <div class="page-btn">
+        <a class="btn btn-primary" (click)="openProductUploadModal()"
+          ><i class="ti ti-circle-plus me-1"></i>Upload Product</a
+        >
+      </div>
+    </div>
+  </div>
+  <div style="flex: 1; overflow: hidden; padding: 0.5rem">
+    <div
+      class="ag-theme-alpine"
+      style="width: 100%; height: 100%; font-size: 12px"
+    >
+      <ag-grid-angular
+        style="width: 100%; height: 100%"
+        [rowData]="filteredProductListsData"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [gridOptions]="gridOptions"
+        [suppressRowClickSelection]="true"
+        [rowSelection]="'multiple'"
+        [domLayout]="'normal'"
+        class="ag-theme-alpine"
+        (gridReady)="onGridReady($event)"
+      >
+      </ag-grid-angular>
+    </div>
+  </div>
+</div>

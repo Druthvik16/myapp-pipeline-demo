@@ -1,0 +1,102 @@
+<div>
+  <div class="modal-header">
+    <div class="page-title">
+      <h4>Header Key Mapping Upload</h4>
+    </div>
+    <button
+      type="button"
+      class="btn btn-info"
+      (click)="downloadTemplate()"
+    >
+      <i class="feather icon-download me-1"></i>Download Template
+    </button>
+  </div>
+
+  <form [formGroup]="uploadHeaderForm" (ngSubmit)="scanHeaderFile()">
+    <div class="modal-body">
+      <div class="row">
+        <div class="mb-3">
+          <label for="headerFile" class="form-label"
+            >Select File&nbsp;[Accept Only .xlsx File]&nbsp;<span
+              class="text-danger"
+              >*</span
+            ></label
+          >
+          <input
+            class="form-control"
+            type="file"
+            required
+            id="headerFile"
+            formControlName="headerFile"
+            [ngClass]="{
+              'is-invalid':
+                !isValidForm && !uploadHeaderForm.controls['headerFile'].valid
+            }"
+            (change)="checkFile($event)"
+            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              uploadHeaderForm.controls['headerFile'].hasError('required') &&
+              !isValidForm
+            "
+          >
+            Please select file
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body px-3" *ngIf="headerValidationResults.length > 0">
+      <div class="modal-body-table" style="max-height: 200px; overflow-y: auto">
+        <div class="table-responsive" style="overflow-x: auto">
+          <h6 class="fw-bold mb-2">Header Validation Result</h6>
+          <table class="table table-bordered" style="min-width: 400px">
+            <thead class="table-light">
+              <tr>
+                <th>Header Name</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of headerValidationResults">
+                <td>{{ item.header }}</td>
+                <td>
+                  <i
+                    [ngClass]="{
+                      'text-success bi bi-check-circle-fill': item.matched,
+                      'text-danger bi bi-x-circle-fill': !item.matched
+                    }"
+                    style="font-size: 1.2rem"
+                  ></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary me-2" *ngIf="!saveClicked">
+        <i class="feather icon-upload me-1"></i>&nbsp;Upload
+      </button>
+      <button
+        class="btn rounded-pill btn-primary"
+        type="button"
+        *ngIf="saveClicked"
+        [disabled]="true"
+      >
+        <span
+          class="spinner-border"
+          style="width: 1rem; height: 1rem"
+          role="status"
+        >
+        </span
+        >&nbsp;Uploading...[Process may take few minute(s)]</button
+      >&nbsp;
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">
+        <i class="feather icon-x me-1"></i>Close
+      </button>
+    </div>
+  </form>
+</div>

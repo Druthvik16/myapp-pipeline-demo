@@ -1,0 +1,64 @@
+<div>
+  <div class="modal-header">
+    <div class="page-title">
+      <h6 class="mb-0">
+        Duplicate Records in System –
+        <span class="text-muted text-dark p-1 rounded bg-gray-200 fw-semibold">
+          {{ fileName }}
+        </span>
+      </h6>
+      <div
+        *ngIf="loading"
+        class="spinner-border text-primary"
+        style="width: 1rem; height: 1rem"
+      ></div>
+    </div>
+    <button type="button" class="close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body p-2" style="padding: 0;">
+    <div
+      style="max-height: 75vh; overflow-y: auto; border: 1px solid #dee2e6;"
+    >
+      <table class="table table-bordered text-center align-middle excel-table">
+        <thead
+          class="table-light"
+          style="position: sticky; top: 0; z-index: 10"
+          *ngIf="!loading && headerNames.length"
+        >
+          <tr>
+            <th *ngFor="let header of headerNames">{{ header }}</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="loading">
+            <td [attr.colspan]="headerNames.length + 1">
+              <em>Loading File...</em>
+            </td>
+          </tr>
+          <tr *ngIf="!loading && tableData.length === 0">
+            <td [attr.colspan]="headerNames.length + 1">
+              <em>No data available.</em>
+            </td>
+          </tr>
+          <tr *ngFor="let row of tableData; let i = index;">
+            <td *ngFor="let header of headerNames">
+              {{ row[header] || "" }}
+            </td>
+            <td>
+              <a class="me-2 p-2"> 
+                <i
+                  (click)="openDuplicateFileModal(originalData[i])"
+                  class="fa-regular fa-file-excel"
+                  style="color: #198754"
+                ></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

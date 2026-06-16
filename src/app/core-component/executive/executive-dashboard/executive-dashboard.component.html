@@ -1,0 +1,137 @@
+<!-- <div class="row">
+  <div class="col-xl-3 col-sm-6 col-12 d-flex" *ngFor="let client of clients">
+    <div
+      class="card text-center flex-fill"
+      (click)="goToUnformatted(client.uuid)"
+      style="cursor: pointer"
+    >
+      <div class="card-body">
+        <h5 class="card-title mb-3">{{ client.name }}</h5>
+        <div class="dash-imgs">
+          <img
+            *ngIf="imagePreviewMap[client.id]"
+            [src]="imagePreviewMap[client.id]"
+            alt="{{ client.name }} Logo"
+            class="img-fluid rounded-circle mb-2"
+            style="width: 60px; height: 60px"
+          />
+          <i
+            *ngIf="!imagePreviewMap[client.id]"
+            class="ti ti-user-circle text-secondary mb-2"
+            style="font-size: 60px; line-height: 60px"
+          ></i>
+        </div>
+      </div>
+      <div class="position-absolute start-0 top-0 z-n1">
+        <img src="assets/img/bg/email-bg-01.png" alt="img" />
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="row">
+  <div class="col-xl-3 col-sm-6 col-12 d-flex" *ngFor="let client of clients">
+    <div
+      class="card text-center flex-fill position-relative shadow-sm"
+      (click)="goToUnformatted(client.uuid)"
+      style="cursor: pointer; overflow: hidden; transition: all 0.3s ease"
+      onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(254, 159, 67, 0.3)'"
+      onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''"
+    >
+      <div
+        class="position-absolute top-0 end-0"
+        style="z-index: 1; opacity: 0.9"
+      >
+        <img
+          src="assets/img/bg/email-bg-01.png"
+          alt="background"
+          style="width: 80px; height: 80px; object-fit: cover"
+        />
+      </div>
+
+      <div class="card-body position-relative" style="z-index: 2">
+        <h5 class="card-title mb-3 fw-bold">
+          {{ client.name }}
+          <i
+            title="View Details"
+            (click)="openClientInfoModal(client)"
+            (click)="$event.stopPropagation()"
+            class="ti ti-info-circle text-primary"
+          ></i>
+        </h5>
+        <div class="dash-imgs">
+          <img
+            *ngIf="imagePreviewMap[client.id]"
+            [src]="imagePreviewMap[client.id]"
+            alt="{{ client.name }} Logo"
+            class="img-fluid rounded-circle mb-2"
+            style="width: 60px; height: 60px"
+          />
+          <i
+            *ngIf="!imagePreviewMap[client.id]"
+            class="ti ti-user-circle mb-2"
+            style="font-size: 60px; line-height: 60px; color: #fe9f43"
+          >
+          </i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Info Modal -->
+<ng-template #clientInfoModal let-modal>
+  <div class="modal-content" style="max-width: 900px; width:fit-content">
+    <div class="modal-header py-2 text-white">
+      <h6 class="mb-0">File Counts – {{ selectedClient?.name }}</h6>
+      <button
+        type="button"
+        class="close text-white"
+        aria-label="Close"
+        (click)="modal.dismiss('close')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body p-3">
+      <table class="table table-bordered border-dark">
+        <thead class="table-light">
+          <tr>
+            <th class="border border-dark">File State</th>
+            <th class="border border-dark">File Count</th>
+            <th class="border border-dark">Tracker</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let state of mandatoryStates">
+            <td class="border border-dark">{{ state | titlecase}}</td>
+            <td class="border border-dark">
+              {{ clientStateMap[selectedClient.id]?.[state] || 0 }}
+            </td>
+            <td class="border border-dark text-center">
+              <button
+                *ngIf="(clientStateMap[selectedClient.id]?.[state] || 0)  !== 0"
+                class="btn btn-sm btn-success"
+                (click)="downloadStateFile(state)"
+                title="Download file for {{ state }}"
+              >
+                <i class="ti ti-download"></i> Download
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-footer py-2">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="modal.dismiss('close')"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</ng-template>

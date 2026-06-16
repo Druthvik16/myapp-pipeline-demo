@@ -1,0 +1,125 @@
+<div class="modal-content" style="flex-direction: column; height: 100vh">
+  <div class="modal-header">
+    <div class="page-title d-flex align-items-center gap-2">
+      <h6 class="fw-bold mb-0">
+        Detail Of Uploaded Data- 
+        <span class="text-dark ms-2 p-1 px-2 rounded bg-gray-200 fw-semibold" style="font-size: 0.875rem;">
+          <!-- {{ brandName }} | {{ customerName }} --> {{title}}
+        </span>
+      </h6>
+      <div *ngIf="loading" class="spinner-border text-primary" style="width: 1rem; height: 1rem"></div>
+    </div>
+    <button type="button" class="close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="card-header">
+    <div class="d-flex justify-content-between align-items-center gap-2 px-3">
+      <div class="gap-2" style="margin-top: 0.75rem">
+        <button [ngClass]="
+            isDateFilterActive
+              ? 'btn btn-success btn-sm rounded ms-2'
+              : 'btn btn-info btn-sm rounded ms-2'
+          " (click)="openDateFilterModal()">
+          <i [ngClass]="
+              isDateFilterActive ? 'ti ti-filter-check' : 'fa fa-filter'
+            "></i>
+          {{ isDateFilterActive ? "Filter Active" : "Filter Options" }}
+        </button>
+        <button type="button" class="btn btn-sm rounded ms-2" [disabled]="!isAnyFilterActive()"
+          (click)="clearAllFilters()" style="background-color: #ff6b6b; color: white">
+          Clear All Filters
+        </button>
+        <button *ngIf="userData?.user?.user_type != 'Executive'" type="button"
+          class="btn btn-warning btn-sm rounded ms-2" [disabled]="!rowsSelected" (click)="createDiscountBucket()">
+          Create Discount Batch
+        </button>
+      </div>
+      <div class="page-btn d-flex mt-2 gap-2">
+        <a
+          *ngIf="!downloadExcel"
+          class="btn btn-success d-flex align-items-center px-3 py-2"
+          (click)="exportToExcel()"
+          style="gap: 8px; font-weight: 500"
+        >
+          <img
+            src="assets/img/icons/excel1.svg"
+            alt="Excel Icon"
+            style="width: 20px; height: 20px"
+          />
+          Download
+        </a>
+        <a
+          *ngIf="downloadExcel"
+          class="btn btn-success d-flex align-items-center px-3 py-2"
+          style="gap: 8px; font-weight: 500; opacity: 0.8; pointer-events: none"
+        >
+          <i class="fas fa-spinner fa-spin" style="font-size: 16px"></i>
+          Downloading...
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body-scrollable" style="flex: 1; overflow-y: auto; padding: 1rem">
+    <ag-grid-angular style="width: 100%; height: 100%" [rowData]="loading ? [] : filteredUploadedData"
+      [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [gridOptions]="gridOptions"
+      [suppressRowClickSelection]="true" [rowSelection]="'multiple'" [domLayout]="'normal'" class="ag-theme-alpine"
+      (gridReady)="onGridReady($event)" [suppressNoRowsOverlay]="loading">
+    </ag-grid-angular>
+  </div>
+</div>
+
+
+
+
+<ng-template #dateFilterModal let-modal>
+  <div class="modal-content">
+    <div class="modal-header py-2">
+      <h6 class="mb-0">Filter by Date</h6>
+      <button type="button" class="close" (click)="modal.dismiss('cancelled')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body overflow-auto" style="max-height: 70vh">
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Uploaded On</label>
+        <div class="position-relative">
+          <input type="text" bsDaterangepicker class="form-control form-control-sm" [bsConfig]="bsDateConfig"
+            placeholder="Select Uploaded On Date Range" [(ngModel)]="tempUploadedOnRange" />
+          <i *ngIf="tempUploadedOnRange"
+            class="ti-close position-absolute top-50 translate-middle-y end-0 me-2 text-muted cursor-pointer"
+            style="font-size: 0.9rem" (click)="tempUploadedOnRange = null"></i>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Secondary Bill Date</label>
+        <div class="position-relative">
+          <input type="text" bsDaterangepicker class="form-control form-control-sm" [bsConfig]="bsDateConfig"
+            placeholder="Select Secondary Bill Date Range" [(ngModel)]="tempSecondaryBillRange" />
+          <i *ngIf="tempSecondaryBillRange"
+            class="ti-close position-absolute top-50 translate-middle-y end-0 me-2 text-muted cursor-pointer"
+            style="font-size: 0.9rem" (click)="tempSecondaryBillRange = null"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer d-flex justify-content-end pt-2 pb-2 border-top">
+      <button class="btn btn-sm btn-secondary me-2" (click)="resetTempDateFields()" type="button">
+        Reset
+      </button>
+      <button *ngIf="!applyDateFilterClicked"  class="btn btn-sm btn-success" (click)="applyDateFilter(modal)" type="button">
+        Apply
+      </button>
+      
+
+      <button *ngIf="applyDateFilterClicked"
+        class="btn btn-sm btn-success"
+        type="button"
+      >
+        <i class="spinner-border text-primary me-1 ms-2"
+          style="width: 1rem; height: 1rem"></i>Applying...
+      </button>
+    </div>
+  </div>
+</ng-template>

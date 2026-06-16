@@ -1,0 +1,141 @@
+<div class="modal-content" style="flex-direction: column; height: 100vh">
+  <div class="modal-header">
+    <div class="page-title d-flex align-items-center gap-2">
+      <h6 class="mb-0">
+        Review File –
+        <span class="text-muted text-dark p-1 rounded bg-gray-200 fw-semibold">
+          {{ fileName }}
+        </span>
+      </h6>
+      <h6>for Approval or Rejection</h6>
+      <div
+        *ngIf="loading"
+        class="spinner-border text-primary"
+        style="width: 1rem; height: 1rem"
+      ></div>
+      <div *ngIf="isFileLocked" class="d-flex align-items-center gap-2 ms-4">
+        <i
+          class="fas fa-lock"
+          style="color: #6f42c1"
+          title="{{ lockMessage }}"
+        ></i>
+        <small class="fw-bold" style="color: #6f42c1">{{ lockMessage }}</small>
+      </div>
+    </div>
+    <button type="button" class="close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  
+  <!-- File Lock Status Alert -->
+  <div *ngIf="isFileLocked" class="lock-banner m-2 mx-3">
+    <div class="lock-banner-content">
+      <i class="fas fa-lock me-2"></i>
+      <span class="lock-message-text">{{ lockMessage }}</span>
+        <small class="ms-2 lock-sub-text"
+          >• Please wait for editing to complete</small
+        >
+    </div>
+  </div>
+  
+  <div
+    class="modal-body-scrollable"
+    style="flex: 1; overflow-y: auto; padding: 1rem"
+  >
+    <div *ngIf="loading" class="loading-overlay">
+      <em>Loading File...</em>
+    </div>
+
+    <div *ngIf="!loading && rowData.length === 0" class="text-center p-3">
+      <em>No data available.</em>
+    </div>
+
+    <ag-grid-angular
+      #agGrid
+      *ngIf="!loading && rowData.length > 0"
+      class="ag-theme-alpine excel-grid"
+      style="width: 100%; height: 100%; overflow: auto"
+      [gridOptions]="gridOptions"
+      [columnDefs]="columnDefs"
+      [rowData]="rowData"
+      [pinnedTopRowData]="pinnedTopRowData"
+      (gridReady)="onGridReady($event)"
+      [autoSizeStrategy]="autoSizeStrategy"
+      [enableCellTextSelection]="true"
+    >
+    </ag-grid-angular>
+  </div>
+  <div class="modal-footer justify-content-end py-1 px-2 border-top">
+    <button
+      *ngIf="!processing"
+      (click)="approveData()"
+      type="button"
+      class="btn btn-success"
+      [disabled]="areButtonsDisabled || (processing && processingSource === 'reject')"
+      [title]="isFileLocked ? 'File is locked by another user' : 'Approve this file'"
+    >
+      <i class="fas fa-check me-1"></i>
+      Approve
+    </button>
+    <button
+      *ngIf="!processing"
+      (click)="rejectFile()"
+      type="button"
+      class="btn btn-danger ms-2"
+      [disabled]="areButtonsDisabled || (processing && processingSource === 'approve')"
+      [title]="isFileLocked ? 'File is locked by another user' : 'Reject this file with reason'"
+    >
+      <i class="fas fa-times me-1"></i>
+      Reject with Reason
+    </button>
+    <button
+      *ngIf="processing && processingSource === 'approve'"
+      class="btn btn-success btn-sm"
+      type="button"
+      disabled
+    >
+      <span class="spinner-border spinner-border-sm" role="status"></span>
+      &nbsp;Approving... [Please wait]
+    </button>
+    <button
+      *ngIf="processing && processingSource === 'reject'"
+      class="btn btn-danger btn-sm ms-2"
+      type="button"
+      disabled
+    >
+      <span class="spinner-border spinner-border-sm" role="status"></span>
+      &nbsp;Rejecting... [Please wait]
+    </button>
+  </div>
+</div>
+
+<ng-template #reasonModal let-modal>
+  <div class="modal-content">
+    <div class="modal-header py-2">
+      <h6 class="mb-0">Provide Rejection Reason</h6>
+      <button
+        type="button"
+        class="close"
+         (click)="modal.dismiss('user-cancelled')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <label class="form-label fw-semibold">Select Reason</label>
+        <div class="position-relative">
+          <select class="form-select mb-3" [(ngModel)]="rejectionReason"
+          aria-label="Select Reason">
+          <option [value]="''">All Reasons</option>
+            <option [value]="reason.remark" *ngFor="let reason of reasonsLists">
+              {{reason.remark}}</option>
+          </select>
+        </div>
+      <div class="d-grid gap-2">
+        <button class="btn btn-sm btn-danger" (click)="submitReason(modal)">
+          Add Reason & Reject
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

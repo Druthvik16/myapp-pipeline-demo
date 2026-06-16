@@ -1,0 +1,299 @@
+
+::ng-deep .ag-theme-alpine {
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 4px !important;
+}
+
+::ng-deep .ag-header {
+  background-color: #D3D3D3 !important;
+  border-bottom: 2px solid #c6cbd1 !important;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+::ng-deep .ag-pinned-top {
+  background-color: #696969 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  position: sticky;
+  top: 24px !important;
+  z-index: 9;
+}
+
+::ng-deep .ag-pinned-top .ag-cell {
+  background-color: #696969 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid #d0d7de !important;
+  padding: 2px 6px !important;
+  height: 22px !important;
+}
+
+::ng-deep .ag-header-cell, ::ng-deep .ag-cell {
+  border-right: 1px solid #d0d7de !important;
+  border-bottom: 1px solid #d0d7de !important;
+  font-size: 11px !important;
+  padding: 2px 6px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 22px !important;
+  vertical-align: middle;
+}
+
+::ng-deep .ag-row:hover .ag-cell {
+  background-color: #f6f8fa !important;
+}
+
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  font-size: 16px;
+  background: white;
+}
+
+
+::ng-deep .ag-theme-alpine {
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 4px !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-header {
+  border: 1px solid #d0d7de !important;
+  background-color: #D3D3D3 !important;
+  border-bottom: 2px solid #c6cbd1 !important;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+::ng-deep .ag-theme-alpine .ag-header-cell {
+  border: 1px solid #d0d7de !important;
+  background-color: #D3D3D3 !important;
+  font-weight: 600 !important;
+  color: #212529 !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  padding: 2px 6px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 24px !important;
+  min-height: 24px !important;
+  max-height: 24px !important;
+  border-right: 1px solid #d0d7de !important;
+  border-bottom: 2px solid #c6cbd1 !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-header-cell-menu-button {
+  position: absolute !important;
+  right: 4px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 12px !important;
+  height: 12px !important;
+  opacity: 0.7 !important;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-header-cell-menu-button:hover {
+  opacity: 1 !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-header-cell,
+::ng-deep .ag-theme-alpine .ag-cell {
+  padding: 0 !important;
+}
+
+::ng-deep .ag-theme-alpine .excel-action-btn {
+  font-size: 10px !important;
+  padding: 1px 6px !important;
+  line-height: 1.2 !important;
+  border-radius: 2px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-cell em {
+  font-style: italic;
+  color: #6c757d !important;
+  font-size: 11px !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-header-cell:first-child,
+::ng-deep .ag-theme-alpine .ag-cell:first-child {
+  border-left: none !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-header-cell:last-child,
+::ng-deep .ag-theme-alpine .ag-cell:last-child {
+  border-right: 1px solid #d0d7de !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-header-viewport {
+  height: 24px !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-header-container {
+  height: 24px !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-cell:focus,
+::ng-deep .ag-theme-alpine .ag-header-cell:focus {
+  outline: none !important;
+}
+
+::ng-deep .excel-cell {
+  user-select: text !important;
+  cursor: text;
+  line-height: 1.2;
+}
+
+.excel-cell {
+  user-select: text !important;
+  cursor: text !important;
+}
+
+.excel-cell:hover {
+  background-color: #f0f0f0 !important;
+}
+
+.ag-cell {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.ag-header-cell {
+  display: flex !important;
+  align-items: center !important;
+}
+
+
+.ag-theme-alpine .ag-cell {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-cell-value {
+  flex: none !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-cell {
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-header-cell-label {
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+  align-self: self-start !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-header-cell-text {
+  padding-right: 0 !important;
+  flex: none !important;
+}
+
+::ng-deep .ag-theme-alpine .excel-header-2 .ag-cell {
+  background-color: #696969 !important;
+  color: #ffffff !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+::ng-deep .ag-header-cell.action-column-border,
+::ng-deep .ag-cell.action-column-border {
+  border-left: 2px solid #999 !important;
+}
+
+::ng-deep .ag-theme-alpine .ag-checkbox-input-wrapper.ag-checked::after {
+  color: #fe9f43 !important;
+}
+
+.ag-theme-alpine {
+  --ag-alpine-active-color: #fe9f43 !important;
+  --ag-selected-row-background-color: transparent !important;
+  --ag-row-hover-color: transparent !important;
+  --ag-range-selection-background-color: transparent !important;
+  --ag-range-selection-background-color-2: transparent !important;
+  --ag-range-selection-background-color-3: transparent !important;
+  --ag-range-selection-background-color-4: transparent !important;
+  --ag-checkbox-checked-color: #fe9f43 !important;
+  --ag-range-selection-border-color: #fe9f43 !important;
+}
+
+
+.ag-cell {
+  white-space: pre !important;
+}
+
+.excel-cell {
+  white-space: pre !important;
+}
+
+.excel-cell {
+  white-space: pre-wrap !important;
+}
+
+.modal-footer {
+  .btn {
+    position: relative;
+    transition: all 0.2s ease-in-out;
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    &.processing {
+      .spinner-border {
+        animation: spinner-border 0.75s linear infinite;
+      }
+    }
+  }
+  
+  .btn + .btn {
+    margin-left: 0.5rem;
+  }
+}
+
+::ng-deep .ag-theme-alpine .ag-header-select-all .ag-checkbox-input-wrapper {
+  margin-left: 35%;
+}
+
+
+.ag-checkbox-input-wrapper input {
+    opacity: 0;              
+    width: 100%;       
+    height: 100%;           
+}
+
+.ag-checkbox-input-wrapper {
+    font-family: var(--ag-icon-font-family);
+    /* ... other font properties ... */
+    width: var(--ag-icon-size);
+    height: var(--ag-icon-size);
+    background-color: var(--ag-checkbox-background-color);
+    border-radius: var(--ag-checkbox-border-radius);
+    display: inline-block;
+    vertical-align: middle;
+}

@@ -1,0 +1,46 @@
+<div class="modal-header" *ngIf="!isMappingUpload">
+  <h5 class="modal-title" id="modal-basic-title">
+    <i class="mdi mdi-plus"></i>&nbsp; {{modalParams.modalName}}
+  </h5>
+</div>
+<form
+  [formGroup]="portalFileForm"
+  class="row g-3"
+  autocomplete="off"
+  (ngSubmit)="submitForm()" 
+>
+  <div class="modal-body">
+    <div class="col-md-12">
+      <label for="selectedFile" class="form-label"
+        >Select File&nbsp;<span class="text-danger">*</span></label
+      >
+      <input
+      class="form-control"
+        type="file"
+        required
+        id="selectedFile"
+        [ngClass]="{
+          'is-invalid':
+            !isValidForm && !portalFileForm.controls['selectedFile'].valid
+        }"
+        (change)="checkFile($event)"
+        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      />
+      @if (!isValidForm && portalFileForm.get('selectedFile')?.errors?.['required']) {
+        <div class="text-danger">Select Test File</div>
+    }
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      class="btn btn-dark me-2"
+      type="button"
+      (click)="closeModal({'result':false})"
+    ><i class="feather icon-x me-1"></i>
+      Close
+    </button>
+    <button class="btn btn-primary" type="submit">
+      <i class="mdi mdi-content-save"></i>&nbsp;Save
+    </button>
+  </div>
+</form>

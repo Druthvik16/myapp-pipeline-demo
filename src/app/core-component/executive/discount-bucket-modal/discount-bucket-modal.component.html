@@ -1,0 +1,59 @@
+<div class="modal-header">
+  <h4 class="modal-title">Create Discount Batch</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+</div>
+
+<div class="modal-body">
+  <div class="row">
+    <div class="col-12">
+      <div class="alert alert-info">
+        <strong>Selected Rows:</strong> {{ selectedData.length }} out of {{ filteredData.length }} filtered rows
+      </div>
+      <div class="row">
+        <div class="col-12 mb-3">
+          <label for="bucketId" class="form-label">Batch ID</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="bucketId"
+            [(ngModel)]="bucketId" 
+            placeholder="Enter bucket ID"
+            disabled
+          />
+        </div>
+        <div class="col-12 mb-3">
+          <label for="bucketName" class="form-label">Batch Name</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="bucketName"
+            [(ngModel)]="bucketName" 
+            placeholder="Enter bucket name"
+            required
+          />
+        </div>
+        <div class="col-12 mb-3">
+          <label for="bucketDescription" class="form-label">Batch Description</label>
+          <textarea 
+            class="form-control" 
+            id="bucketDescription"
+            [(ngModel)]="bucketDescription" 
+            placeholder="Enter bucket description"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary px-4 mx-2" (click)="closeModal()" [disabled]="isLoading">
+    Cancel
+  </button>
+  <button type="button" class="btn btn-primary px-4 mx-2" (click)="createBucket()" [disabled]="isLoading">
+    <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+    {{ isLoading ? 'Creating...' : 'Create Batch' }}
+  </button>
+</div> 

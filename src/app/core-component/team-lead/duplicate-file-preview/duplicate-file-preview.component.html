@@ -1,0 +1,59 @@
+<div class="modal-content" style="flex-direction: column; height: 100vh">
+  <div class="modal-header">
+    <div class="page-title d-flex align-items-center gap-2">
+      <h6 class="mb-0">Preview of Duplicate File - 
+        <span class="text-muted ms-2 text-dark p-1 rounded bg-gray-100">
+          {{fileName}}
+        </span></h6>
+      <div
+        *ngIf="loading"
+        class="spinner-border text-primary"
+        style="width: 1rem; height: 1rem"
+      ></div>
+    </div>
+    <button type="button" class="close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div
+    class="modal-body-scrollable"
+    style="flex: 1; overflow-y: auto; padding: 1rem"
+  >
+    <div class="table-responsive" style="height: 100%">
+      <table class="table table-bordered text-center align-middle excel-table">
+        <thead *ngIf="!loading && headerNames.length">
+          <tr class="excel-header-1">
+            <th *ngFor="let header of headerNames">
+              {{ header }}
+            </th>
+          </tr>
+        </thead>
+        <thead *ngIf="dualHeaderActive">
+          <tr class="excel-header-2">
+            <th *ngFor="let header of headerNames">
+              {{ fileData.data[0][header] || '' }}
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngIf="loading">
+            <td [attr.colspan]="headerNames.length + 1">
+              <em>Loading File...</em>
+            </td>
+          </tr>
+          <tr *ngIf="!loading && tableData.length === 0">
+            <td [attr.colspan]="headerNames.length + 1">
+              <em>No data available.</em>
+            </td>
+          </tr>
+          <tr *ngFor="let row of tableData; let i = index">
+            <td *ngFor="let header of headerNames">
+              {{ row[header] }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

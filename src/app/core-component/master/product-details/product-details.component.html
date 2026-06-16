@@ -1,0 +1,196 @@
+<div class="row">
+  <div class="col-xl-12">
+    <div class="card">
+      <div class="card-header align-items-center d-flex">
+        <h4 class="card-title mb-0 flex-grow-1">
+          Product&nbsp;<span [class]="setUserStatusClass(product?.is_active)">
+            {{ product?.is_active == 1 ? "Active" : "Deactive" }}
+          </span>
+        </h4>
+        <div class="flex-shrink-0">
+          <div class="form-check form-switch form-switch-right form-switch-md">
+            <button class="btn btn-dark" type="button" (click)="back()">
+              <i class="ti ti-arrow-narrow-left"></i>
+              Back
+            </button>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3">
+            <label for="name" class="form-label">Brand</label><br />
+            {{ product?.brand }}
+          </div>
+
+          <div class="col-md-3">
+            <label for="shortName" class="form-label">Sub Brand</label><br />
+            {{ product?.sub_brand }}
+          </div>
+          <div class="col-md-3">
+            <label for="companyName" class="form-label">Product Group</label
+            ><br />
+            {{ product?.product_group }}
+          </div>
+          <div class="col-md-3">
+            <label for="email" class="form-label">Style Code</label><br />
+            {{ product?.style_code }}
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-md-3">
+            <label for="mobile" class="form-label">Collection</label><br />
+            {{ product?.collection }}
+          </div>
+          <div class="col-md-3">
+            <label for="gstin" class="form-label">Product Type</label><br />
+            {{ product?.product_type }}
+          </div>
+
+          <div class="col-md-3">
+            <label for="pan" class="form-label">Category</label><br />
+            {{ product?.category }}
+          </div>
+          <div class="col-md-3">
+            <label for="tan" class="form-label">Gender</label><br />
+            {{ product?.gender }}
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-md-3">
+            <label for="addressLine1" class="form-label">Created On</label
+            ><br />
+            {{ product?.created_on | date : "yyy-MM-dd" }}
+          </div>
+
+          <div class="col-md-3">
+            <label for="addressLine2" class="form-label">Updated On</label
+            ><br />
+            {{ product?.updated_on | date : "yyy-MM-dd" }}
+          </div>
+          <div class="col-md-3">
+            <label for="addressLine3" class="form-label">EAN</label><br />
+            {{ product?.ean_list?.[0].ean }}
+          </div>
+          <div class="col-md-3">
+            <label for="city" class="form-label">EAN Created On</label><br />
+            {{ product?.ean_list?.[0].created_on | date : "yyy-MM-dd" }}
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-md-3">
+            <label for="role" class="form-label">EAN Updated On</label><br />
+            {{ product?.ean_list?.[0].updated_on | date : "yyy-MM-dd" }}
+          </div>
+          <div class="col-md-3">
+            <label for="pincode" class="form-label">EAN Active</label><br />
+            <span
+              class="badge badge-xs shadow-none"
+              [ngClass]="
+                product?.ean_list?.[0].is_active === 1
+                  ? 'badge-soft-success'
+                  : 'badge-soft-danger'
+              "
+            >
+              <i class="ti ti-point-filled me-1"></i>
+              {{ product?.ean_list?.[0].is_active === 1 ? "Active" : "Inactive" }}
+            </span>
+          </div>
+        </div>
+        <hr />
+        <h4 class="card-title mb-0 flex-grow-1">
+          MRP Details
+          <span class="badge rounded-pill badge-sm bg-primary ms-2">{{
+            totalData
+          }}</span>
+          <span
+            class="spinner-border text-primary me-1 ms-2"
+            style="width: 1rem; height: 1rem"
+            *ngIf="loadingProducts"
+            role="status"
+          ></span>
+        </h4>
+        <br />
+        <div class="card table-list-card">
+          <div
+            class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3"
+          >
+            <div class="search-set">
+              <div class="search-input">
+                <a class="btn btn-searchset"
+                  ><i class="ti ti-search fs-14 feather-search"></i
+                ></a>
+                <div class="dataTables_filter">
+                  <label>
+                    <input
+                      [(ngModel)]="searchDataValue"
+                      [ngModelOptions]="{ standalone: true }"
+                      [ngModelOptions]="{ standalone: true }"
+                      (ngModelChange)="searchData(searchDataValue)"
+                      type="search"
+                      class="form-control form-control-sm"
+                      placeholder="Search"
+                      aria-controls="DataTables_Table_0"
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="custom-datatable-filter table-responsive">
+              <table class="table datatable">
+                <thead class="thead-light">
+                  <tr>
+                    <th>S.No</th>
+                    <th>Style Code</th>
+                    <th>MRP</th>
+                    <th>WEF</th>
+                    <th>Created On</th>
+                    <th>Updated On</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (data of tableData; track $index) {
+                  <tr>
+                    <td>{{ data.sNo }}</td>
+                    <td>{{ data.style_code }}</td>
+                    <td>{{ data.mrp }}</td>
+                    <td>{{ data.wef }}</td>
+                    <td>{{ data.created_on | date : "dd/MM/yyyy" }}</td>
+                    <td>{{ data.updated_on | date : "dd/MM/yyyy" }}</td>
+                    <td>
+                      <span
+                        class="badge badge-xs shadow-none"
+                        [ngClass]="
+                          data.is_active === 1
+                            ? 'badge-soft-success'
+                            : 'badge-soft-danger'
+                        "
+                      >
+                        <i class="ti ti-point-filled me-1"></i>
+                        {{ data.is_active === 1 ? "Active" : "Inactive" }}
+                      </span>
+                    </td>
+                  </tr>
+                  } @if (tableData.length == 0) {
+                  <tr>
+                    <td colspan="12">
+                      <h5 class="no-record">No matching records found</h5>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

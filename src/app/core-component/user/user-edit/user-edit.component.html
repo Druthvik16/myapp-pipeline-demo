@@ -1,0 +1,218 @@
+<div>
+  <div class="">
+    <div class="">
+      <div class="modal-header">
+        <div class="page-title">
+          <h4>Edit User</h4>
+        </div>
+        <button type="button" class="close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form [formGroup]="editUserForm" (ngSubmit)="updateUser()">
+        <div class="modal-body p-3">
+          <div class="row">
+            <div formGroupName="staff" class="col-lg-12">
+              <div class="mb-3">
+                <label class="form-label"
+                  >Staff<span class="text-danger ms-1">*</span></label
+                >
+                <select class="form-select" required formControlName="id"
+                  [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !editUserForm.get('staff.id')?.valid
+                  }">
+                  <option [value]="staff.id" *ngFor="let staff of staffs">
+                    {{ staff.staff_name }}
+                  </option>
+                </select>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    editUserForm.get('staff.id')?.hasError('required') &&
+                    !isValidForm
+                  "
+                >
+                  Please select a staff
+                </div>
+              </div>
+            </div>  
+            <div class="multiselect-dropdown col-lg-12 mb-3">
+              <div class="mb-2 position-relative">
+                <label class="form-label"
+                  >Select Roles</label
+                >
+                <div
+                  class="form-select align-items-center"
+                  (click)="toggleDropdown($event)"
+                  tabindex="0"
+                  [ngClass]="{
+                    'is-invalid':
+                      editUserForm.controls['roles'].invalid && !isValidForm
+                  }"
+                  style="
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    height: 37.75px;
+                    position: relative;
+                    padding-right: 50px;
+                  "
+                >
+                  <div
+                    class="selected-items-container flex flex-nowrap align-items-center"
+                    style="overflow-x: auto"
+                  >
+                    <input
+                      type="text"
+                      [ngModelOptions]=" 
+             {standalone: true}"
+                      [(ngModel)]="searchTerm"
+                      (input)="onSearchInput()"
+                      class="border-0 outline-0"
+                      placeholder="Search"
+                      style="
+                        flex-shrink: 0;
+                        border: none;
+                        outline: none;
+                        font-size: 12px;
+                        width: 120px;
+                      "
+                      (click)="$event.stopPropagation()"
+                    />
+                    <span
+                      *ngFor="let selected of getDisplayItems()"
+                      class="badge bg-primary"
+                      style="
+                        align-items: center;
+                        font-size: 10px;
+                        padding: 0.2rem 0.4rem;
+                        border-radius: 0.5rem;
+                      "
+                    >
+                      {{ selected.role_name }}
+                      <span
+                        class="ms-1 cursor-pointer"
+                        (click)="removeSelected(selected)"
+                        style="cursor: pointer; font-size: 10px"
+                      >
+                        &times;
+                      </span>
+                    </span>
+                  </div>
+                  <span
+                    *ngIf="shouldShowClearAll()"
+                    class="clear-icon"
+                    (click)="clearAllSelections($event)"
+                    title="Clear All"
+                    style="cursor: pointer"
+                  >
+                    &times;
+                  </span>
+                  <span class="dropdown-arrow" title="Toggle Dropdown"> </span>
+                </div>
+                <div
+                  class="dropdown-menu show w-100 mt-0 position-absolute"
+                  style="
+                    border: 1px solid #ddd;
+                    top: 100%;
+                    margin-top: 0;
+                    font-size: 14px;
+                    z-index: 1000;
+                  "
+                  *ngIf="dropdownOpen"
+                >
+                  <div
+                    *ngFor="let role of filteredRoles"
+                    class="dropdown-item"
+                    [class.active]="isSelected(role)"
+                    style="cursor: pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      [checked]="isSelected(role)"
+                      (click)="$event.stopPropagation()"
+                      (change)="toggleSelection(role)"
+                      style="margin-right: 8px"
+                    />
+                    {{ role.role_name }}
+                  </div>
+                  <div
+                    *ngIf="filteredRoles.length === 0"
+                    class="dropdown-item text-muted"
+                  >
+                    No results found.
+                  </div>
+                </div>
+              </div>
+              <div
+                  class="invalid-feedback mb-3"
+                  *ngIf="
+                    editUserForm.get('roles')?.hasError('required') &&
+                    !isValidForm
+                  "
+                  style="display: block"
+                >
+                  Please select a role
+                </div>
+            </div>
+          </div>
+          
+          <!-- Password Field -->
+          <div class="col-lg-12 mb-3">
+            <div class="mb-2">
+              <label class="form-label">
+                Password
+              </label>
+              <div class="position-relative">
+                <input
+                  type="{{ showPassword ? 'text' : 'password' }}"
+                  class="form-control"
+                  formControlName="password"
+                  placeholder="Enter password (min 8 characters)"
+                  [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && editUserForm.get('password')?.invalid && editUserForm.get('password')?.touched && editUserForm.get('password')?.value
+                  }"
+                />
+                <button
+                  type="button"
+                  class="btn btn-sm position-absolute"
+                  style="right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #6c757d;"
+                  (click)="togglePasswordVisibility()"
+                  title="{{ showPassword ? 'Hide password' : 'Show password' }}"
+                >
+                  <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+                </button>
+              </div>
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  editUserForm.get('password')?.hasError('minlength') &&
+                  !isValidForm && editUserForm.get('password')?.touched && editUserForm.get('password')?.value
+                "
+              >
+                Password must be at least 8 characters long
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary me-2">
+            <i class="feather icon-edit-2 me-1"></i>Update</button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal()"
+          >
+            <i class="feather icon-x me-1"></i>Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

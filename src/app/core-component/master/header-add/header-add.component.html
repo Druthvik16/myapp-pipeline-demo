@@ -1,0 +1,120 @@
+<div
+  class="page-header d-flex justify-content-between align-items-center flex-wrap"
+>
+  <div class="d-flex align-items-center flex-wrap gap-3">
+    <div class="page-title">
+      <h4 class="mb-0">Header Creation</h4>
+    </div>
+
+    <div class="search-set ms-3">
+      <div class="search-input d-flex align-items-center">
+        <a class="btn btn-searchset me-1">
+          <i class="ti ti-search fs-14 feather-search"></i>
+        </a>
+        <div class="dataTables_filter mb-0">
+          <input
+            type="search"
+            class="form-control form-control-sm"
+            placeholder="Search"
+            aria-controls="DataTables_Table_0"
+            (input)="onSearchChange($event)"
+            [value]="searchTerm"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-btn mt-2 mt-md-0">
+    <a class="btn btn-secondary me-2" (click)="viewKeyMappingDeleteLog()">
+      <i class="ti ti-archive me-1"></i>View Deleted Mappings
+    </a>
+    <a class="btn btn-primary" (click)="openHeaderAddModal()">
+      <i class="ti ti-circle-plus me-1"></i>Add Header
+    </a>
+  </div>
+</div>
+<div
+  class="card table-list-card"
+  style="height: 70vh; display: flex; flex-direction: column; overflow: hidden"
+>
+  <div class="card-body" style="flex: 1; overflow: auto; padding: 0">
+    <div
+      class="table-responsive"
+      style="width: 100%; height: 100%; overflow: auto"
+    >
+      <table class="table table-bordered text-center align-middle excel-table">
+        <thead class="table-light">
+          <tr>
+            <th class="sticky-th" *ngFor="let header of headerNames">
+              <span [innerHTML]="getHighlightedText(header)"></span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="maxRows === 0">
+            <td [attr.colspan]="headerNames.length">
+              <em>No mapped keys available.</em>
+            </td>
+          </tr>
+          <tr *ngFor="let i of rowIndexes; let rowIndex = index">
+            <td *ngFor="let colData of mappingData; let colIndex = index">
+              <div class="d-flex justify-content-between align-items-center">
+                <span
+                  *ngIf="colData?.key_map[i]"
+                  [innerHTML]="getHighlightedText(colData?.key_map[i])"
+                ></span>
+                <i
+                  *ngIf="colData.key_map[i]"
+                  class="fa-solid fa-trash-can ms-2"
+                  style="color: red; cursor: pointer"
+                  (click)="deleteRow(colData.id, colData?.key_map[i])"
+                ></i>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<ng-template #reasonModal let-modal>
+  <div class="modal-content">
+    <div class="content">
+      <div class="modal-header py-2">
+        <h6 class="mb-0">
+          Delete Remark for
+          <span class="text-danger fw-semibold">{{ selectedDeleteKey }}</span>
+        </h6>
+        <button
+          type="button"
+          class="close position-absolute"
+          style="
+            top: 10px;
+            right: 15px;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            line-height: 1;
+          "
+          (click)="modal.dismiss('user-cancelled')"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <textarea
+          [(ngModel)]="deleteRemark"
+          rows="4"
+          class="form-control border-secondary mb-3"
+          placeholder="Enter delete remark here..."
+        ></textarea>
+        <div class="d-grid gap-2">
+          <button class="btn btn-sm btn-danger" (click)="submitRemark(modal)">
+            Submit Remark & Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

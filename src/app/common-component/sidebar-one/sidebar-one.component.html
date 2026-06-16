@@ -1,0 +1,160 @@
+<div class="sidebar" id="sidebar" (mouseover)="miniSideBarMouseHover('over')" (mouseout)="miniSideBarMouseHover('out')">
+  <div class="sidebar-logo">
+    <a [routerLink]="logoRoute" class="logo logo-normal">
+      <img src="assets/img/logo-infomap.jpg" alt="Img">
+    </a>
+    <a [routerLink]="logoRoute" class="logo logo-white">
+      <img src="assets/img/logo-white.svg" alt="Img">
+    </a>
+    <a [routerLink]="logoRoute" class="logo-small">
+      <img src="assets/img/infomap-logo-sm.ico" alt="Img">
+    </a>
+    <a id="toggle_btn" href="javascript:void(0);" (click)="toggleSidebar()" [ngClass]="{'d-none': page === 'pos'}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-left feather-16"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg>
+    </a>
+  </div>
+  <ng-scrollbar>
+  <div class="sidebar-inner slimscroll">
+      <div id="sidebar-menu" class="sidebar-menu">
+        <ul>
+          @for (mainTittle of side_bar_data; track mainTittle) {
+          <li class="submenu-open">
+            <h6 class="submenu-hdr">{{ mainTittle.tittle }}</h6>
+            <ul>
+              @for (menu of mainTittle?.menu; track menu) {
+                @if (menu?.hasSubRoute === false) {
+                <li routerLinkActive="active">
+                  <a class="sub-active" (click)="expandSubMenus(menu)" [routerLink]="menu?.route">
+                    @if (menu.icon){
+                      <i class="fs-16 feather" [class]="'icon-' + menu.icon"></i>
+                    }
+                    @if (menu.icon2){
+                    <i class="fs-16 ti" [class]="'ti-' + menu.icon2"></i>
+                    }
+                    <span>{{ menu?.menuValue }}</span>
+                    @if(menu?.menuValue==='Changelog'){
+                    <span class="badge bg-primary badge-xs text-white fs-10 ms-2">v2.0.9</span>
+                    }
+                  </a>
+                </li>
+                }
+                @if (menu.hasSubRoute === true) {
+                <li class="submenu">
+                  <a class="sub-active" href="javascript:void(0)" (click)="expandSubMenus(menu)"
+                    [ngClass]="{ 'subdrop': menu.showSubRoute === true}"
+                    [class.active]="base === base === menu.base">
+                    @if (menu.icon){
+                      <i class="fs-16 feather" [class]="'icon-' + menu.icon"></i>
+                    }
+                    @if (menu.icon2){
+                    <i class="fs-16 ti" [class]="'ti-' + menu.icon2"></i>
+                    }
+                    <span>{{ menu.menuValue }}</span>
+                    <span class="menu-arrow"></span>
+                  </a>
+                  <ul [ngClass]="
+                          menu.showSubRoute === true
+                            ? 'd-block'
+                            : 'd-none'
+                        ">
+                    @for (subMenus of menu.subMenus; track subMenus) {
+                    <li>
+                      <a [routerLink]="subMenus.route" routerLinkActive="active">{{ subMenus.menuValue }}</a>
+                    </li>
+                    }
+                  </ul>
+                </li>
+                }
+                @if (menu.hasSubRouteTwo === true) {
+                <li class="submenu">
+                  <a href="javascript:void(0);"  (click)="expandSubMenus(menu)" [ngClass]="{ 'subdrop': menu.showSubRoute === true}"
+                    [class.active]="base === menu.base">
+                    @if (menu.icon){
+                      <i class="feather" [class]="'icon-' + menu.icon"></i>
+                    }
+                    @if (menu.icon2){
+                    <i class="fs-16 ti" [class]="'ti-' + menu.icon2"></i>
+                    }
+                    <span>
+                      {{menu.menuValue }}</span><span class="menu-arrow"></span></a>
+                  <ul [ngClass]="menu.showSubRoute === true ? 'show-sub-menu' : 'hide-sub-menu'">
+                    @for (subMenus of menu.subMenus; track subMenus) {
+                    @if (subMenus.customSubmenuTwo === false) {
+                    <li><a [routerLink]="subMenus.route" routerLinkActive="active">{{ subMenus.menuValue }}</a></li>
+                    }
+                    @if (subMenus.customSubmenuTwo === true) {
+                    <li class="submenu submenu-two">
+                      <a href="javascript:void(0);"
+                       [class.active]="openSubmenuOneItem === subMenus && (page === subMenus.page1 || page === subMenus.page2 || page === subMenus.page3 || page === subMenus.page4 || page === subMenus.page5 || page === subMenus.page6 || page === subMenus.page7 || page === subMenus.page8)"
+                        (click)="openSubmenuOne(subMenus)" [ngClass]="{'subdrop' : openSubmenuOneItem === subMenus}">
+                        {{ subMenus.menuValue }}
+                        <span class="menu-arrow inside-submenu"></span>
+                      </a>
+                      <ul [ngClass]="openSubmenuOneItem === subMenus ? 'd-block' : 'd-none'">
+                        @for (subMenuTwo of subMenus.subMenusTwo; track subMenuTwo) {
+                        <li>
+                          <a [routerLink]="subMenuTwo.route" routerLinkActive="active">{{ subMenuTwo.menuValue
+                            }}</a>
+                        </li>
+                        }
+                      </ul>
+                    </li>
+                    }
+                    }
+                  </ul>
+                </li> 
+                }
+                @if (menu.hasSubRouteThree === true) {
+                <li class="submenu">
+                  <a href="javascript:void(0);" (click)="multiLevelOne()"
+                    [ngClass]="{'subdrop' : multiLevel1 === true}">
+                    @if (menu.icon2){
+                    <i class="ti" [class]="'ti-' + menu.icon2"></i>
+                    }
+                      {{menu.menuValue}}
+                      <span class="menu-arrow"></span></a>
+                  <ul [ngClass]="multiLevel1 ? 'd-block' : 'd-none'">
+                    @for (subMenus of menu.subMenus; track subMenus) {
+                    @if (subMenus.customSubmenuThree === false) {
+                    <li><a href="javascript:void(0);">{{ subMenus.menuValue }}</a></li>
+                    }
+                    @if (subMenus.customSubmenuThree === true) {
+                    <li class="submenu submenu-two"><a href="javascript:void(0);" (click)="multiLevelTwo()"
+                        [ngClass]="{'subdrop' : multiLevel2 === true}">{{
+                        subMenus.menuValue }}<span class="menu-arrow inside-submenu"></span></a>
+                      <ul [ngClass]="multiLevel2 ? 'd-block' : 'd-none'">
+                        @for (subMenuTwo of subMenus.subMenusTwo; track subMenuTwo) {
+                        @if (subMenuTwo.customSubmenuFour === false) {
+                        <li><a href="javascript:void(0);">{{ subMenuTwo.menuValue }}</a></li>
+                        }
+                        @if (subMenuTwo.customSubmenuFour === true) {
+                        <li class="submenu submenu-two submenu-three">
+                          <a href="javascript:void(0);" (click)="multiLevelThree()"
+                            [ngClass]="{'subdrop' : multiLevel3 === true}">
+                            {{ subMenuTwo.menuValue }}
+                            <span class="menu-arrow inside-submenu inside-submenu-two"></span>
+                          </a>
+                          <ul [ngClass]="multiLevel3 ? 'd-block' : 'd-none'">
+                            @for (subMenusThree of subMenuTwo.subMenusThree; track subMenusThree) {
+                            <li><a href="javascript:void(0);">{{ subMenusThree.menuValue }}</a></li>
+                            }
+                          </ul>
+                        </li>
+                        }
+                        }
+                      </ul>
+                    </li>
+                    }
+                    }
+                  </ul>
+                </li>
+                }
+              }
+            </ul>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </ng-scrollbar>
+</div>

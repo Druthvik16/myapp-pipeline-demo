@@ -1,0 +1,94 @@
+<div>
+  <div class="modal-header">
+    <div class="page-title">
+      <h4>Add Header Mapping</h4>
+    </div>
+  </div>
+  <div class="row g-3">
+    <div class="modal-body p-3">
+      <span class="col-md-12 d-flex flex-nowrap gap-2 align-items-stretch">
+  <button type="button" class="btn btn-success flex-fill text-nowrap"
+    *ngIf="isValidated">
+    <span class="mdi mdi-check-circle fs-5"></span>
+    Validate Mapping
+  </button>
+
+  <button type="button" class="btn btn-danger flex-fill text-nowrap"
+    [disabled]="isValidated" *ngIf="!isValidated"
+    (click)="uploadValidateMapping()">
+    <span class="mdi mdi-close-circle"></span>
+    Validate Mapping
+  </button>
+
+  <button type="button" [disabled]="isValidated"
+    class="btn btn-primary flex-fill text-nowrap"
+    (click)="downloadMappingFormat()">
+    <span class="mdi mdi-download"></span>
+    Download Mapping Format
+  </button>
+
+  <button type="button" [disabled]="isValidated"
+    class="btn btn-success flex-fill text-nowrap"
+    (click)="uploadMappingFormat()">
+    <span class="mdi mdi-upload"></span>
+    Upload Mapping File
+  </button>
+</span>
+      <hr />
+      <div style="max-height: 200px; overflow-y: auto;">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th style="width: 3px;">Status</th>
+              <th>System Headers</th>
+              <th>Product Headers</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <ng-container *ngFor="let row of getKeyRows(orderFormatKeys); let i = index">
+              <ng-container *ngFor="let key of row">
+                <tr>
+                  <!-- STATUS -->
+                  <td style="width: 3px; padding: 3px !important;">
+
+                    <!-- STATUS FALSE -->
+                    <span *ngIf="orderFormatKeys[key].status == false" style="font-size: 20px;"
+                      class="mdi mdi-close-circle text-danger"></span>
+
+                    <!-- STATUS TRUE -->
+                    <span *ngIf="orderFormatKeys[key].status == true" style="font-size: 20px;"
+                      class="mdi mdi-check-circle text-success"></span>
+
+                  </td>
+
+                  <!-- DESTINATION HEADER -->
+                  <td style="padding: 5px 3px !important;">
+                    {{ key }}
+                  </td>
+
+                  <!-- PORTAL HEADER -->
+                  <td style="padding: 5px 3px !important;">
+                    {{ orderFormatKeys[key].value }}
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary me-2"
+      [disabled]="!isValidated" (click)="saveHeaderMapping()">
+        <i class="feather icon-check me-1"></i>Save
+      </button>
+
+      <button type="button" class="btn btn-secondary" (click)="closeModal({result : false})">
+        <i class="feather icon-x me-1"></i> Cancel
+      </button>
+    </div>
+  </div>
+</div>

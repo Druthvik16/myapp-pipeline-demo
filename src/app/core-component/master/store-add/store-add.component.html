@@ -1,0 +1,387 @@
+<div>
+  <div class="modal-header">
+    <div class="page-title">
+      <h4>Add Store</h4>
+    </div>
+    <button type="button" class="close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <form [formGroup]="storeAddForm" (ngSubmit)="saveStore()">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-3 col-md-6">
+          <div class="mb-3">
+            <label class="form-label"
+              >Customer/Store Code<span class="text-danger ms-1">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="storeCode"
+              required
+              formControlName="storeCode"
+              [ngClass]="{
+                'is-invalid':
+                  !isValidForm && !storeAddForm.controls['storeCode'].valid
+              }"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                storeAddForm.controls['storeCode'].hasError('required') &&
+                !isValidForm
+              "
+            >
+              Please enter code
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="mb-3">
+            <label class="form-label"
+              >Name<span class="text-danger ms-1">*</span></label
+            >
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="form-control"
+              required
+              [ngClass]="{
+                'is-invalid':
+                  storeAddForm.controls['name'].invalid && !isValidForm
+              }"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                storeAddForm.controls['name'].hasError('required') &&
+                !isValidForm
+              "
+            >
+              Please enter name
+            </div>
+
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                storeAddForm.controls['name'].hasError('pattern') &&
+                !isValidForm
+              "
+            >
+              Only alphabet allowed with space
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="mb-3">
+            <label class="form-label"
+              >Email</label
+            >
+            <input
+              type="email"
+              formControlName="email"
+              class="form-control"
+              id="email"
+              [ngClass]="{
+                'is-invalid':
+                  !isValidForm && storeAddForm.controls['email'].hasError('pattern')
+              }"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                storeAddForm.controls['email'].hasError('pattern') &&
+                !isValidForm
+              "
+            >
+              Please enter valid email
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="mb-3">
+            <label class="form-label"
+              >Telephone</label
+            >
+            <input
+              type="text"
+              id="telephone"
+              class="form-control"
+              formControlName="telephone"
+              [ngClass]="{ }"
+              minlength="10"
+              maxlength="10"
+            />
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="mb-3">
+            <label for="address" class="form-label"
+              >Address</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="address"
+              formControlName="address"
+              [ngClass]="{ }"
+              maxlength="200"
+            />
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="mb-3">
+            <label class="form-label"
+              >City<span class="text-danger ms-1">*</span></label
+            >
+            <input
+              type="text"
+              id="city"
+              required
+              class="form-control"
+              formControlName="city"
+              [ngClass]="{
+                'is-invalid':
+                  !isValidForm && !storeAddForm.controls['city'].valid
+              }"
+              maxlength="50"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                storeAddForm.controls['city'].hasError('required') &&
+                !isValidForm
+              "
+            >
+              Please enter city
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="input-blocks">
+            <label for="state" class="form-label"
+              >State<span class="text-danger ms-1">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="state"
+              formControlName="state"
+              [ngClass]="{
+                'is-invalid':
+                  !isValidForm && !storeAddForm.controls['state'].valid
+              }"
+              maxlength="50"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                storeAddForm.controls['state'].hasError('required') &&
+                !isValidForm
+              "
+            >
+              Please enter state
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="input-blocks">
+            <label for="state" class="form-label"
+              >Region<span class="text-danger ms-1">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="region"
+              formControlName="region"
+              [ngClass]="{
+                'is-invalid':
+                  !isValidForm && !storeAddForm.controls['region'].valid
+              }"
+              maxlength="50"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                storeAddForm.controls['region'].hasError('required') &&
+                !isValidForm
+              "
+            >
+              Please enter region
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="input-blocks">
+            <label for="state" class="form-label"
+              >Contact Person Name</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="contactPersonName"
+              formControlName="contactPersonName"
+              [ngClass]="{ }"
+              maxlength="50"
+            />
+          </div>
+        </div>
+        <div formGroupName="client" class="col-lg-3 col-md-6">
+          <div class="mb-3">
+            <label class="form-label"
+              >Client<span class="text-danger ms-1">*</span></label
+            >
+            <select
+              class="form-select"
+              required
+              formControlName="id"
+              [ngClass]="{
+                'is-invalid':
+                  !isValidForm && !storeAddForm.get('client.id')?.valid
+              }"
+            >
+              <option value="{{ client.uuid }}" *ngFor="let client of clients">
+                {{ client.name }}
+              </option>
+            </select>
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                storeAddForm.get('client.id')?.hasError('required') &&
+                !isValidForm
+              "
+            >
+              Please select a client
+            </div>
+          </div>
+        </div>
+        <div formGroupName="category" class="col-lg-3 col-md-6">
+          <div class="mb-3">
+            <label class="form-label"
+              >Category</label
+            >
+            <select
+              class="form-select"
+              formControlName="id"
+              [ngClass]="{ }"
+            >
+              <option
+                value="{{ category.id }}"
+                *ngFor="let category of categories"
+              >
+                {{ category.category_name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div formGroupName="salesGroup" class="col-lg-3 col-md-6">
+          <div class="mb-3">
+            <label class="form-label"
+              >Sales Group</label
+            >
+            <select
+              class="form-select"
+              formControlName="id"
+              [ngClass]="{ }"
+            >
+              <option
+                value="{{ salesGroup.id }}"
+                *ngFor="let salesGroup of salesGroups"
+              >
+                {{ salesGroup.sale_group_name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="input-blocks">
+            <label for="state" class="form-label"
+              >Margin %</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="margin"
+              formControlName="margin"
+              [ngClass]="{ }"
+              maxlength="50"
+            />
+          </div>
+        </div>
+        <hr />
+        <h6 class="mb-0">Brand Mapping</h6>
+        <br />
+        <div class="row align-items-end">
+          <div formGroupName="brand" class="col-lg-3 col-md-6">
+            <div class="mb-3">
+              <label class="form-label">
+                Brand<span
+                  class="text-danger ms-1"
+                  *ngIf="brandMappings.length === 0"
+                  >*</span
+                >
+              </label>
+              <select class="form-select" formControlName="id">
+                <option value="{{ brand.id }}" *ngFor="let brand of brands">
+                  {{ brand.brand_name }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Sub Brand selection removed as per requirement -->
+
+          <div class="col-lg-2 col-md-4 d-flex mb-3">
+            <button
+              type="button"
+              class="btn btn-primary flex-grow-1"
+              style="min-width: 120px"
+              (click)="addBrandMapping()"
+            >
+              <i class="ti ti-circle-plus me-2"></i>Add
+            </button>
+          </div>
+        </div>
+        <div
+          style="max-width: 700px"
+          class="table-responsive mt-3"
+          *ngIf="brandMappings.length > 0"
+        >
+          <table class="table table-bordered table-sm">
+            <thead>
+              <tr>
+                <th>Brand</th>
+                <th>Sub Brand</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let mapping of brandMappings; let i = index">
+                <td>{{ mapping.brandName }}</td>
+                <td>{{ mapping.subBrandName }}</td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-danger"
+                    (click)="removeMapping(i)"
+                  >
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary me-2">
+        <i class="feather icon-check me-2"></i>Save</button>
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">
+        <i class="feather icon-x me-2"></i>Close
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,160 @@
+<div>
+  <div class="">
+    <div class="">
+      <div class="modal-header">
+        <div class="page-title">
+          <h4>Edit Staff</h4>
+        </div>
+        <button type="button" class="close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form [formGroup]="editStaffForm" (ngSubmit)="updateStaff()">
+        <div class="modal-body p-3">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="mb-3">
+                <label class="form-label"
+                  >Name<span class="text-danger ms-1">*</span></label
+                >
+                <input type="text" formControlName="name" id="name" class="form-control" 
+                [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !editStaffForm.controls['name'].valid
+                  }"
+                  maxLength="50"/>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    editStaffForm.controls['name'].hasError('required') &&
+                    !isValidForm
+                  "
+                >
+                  Please enter name
+                </div>
+
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    editStaffForm.controls['name'].hasError('pattern') &&
+                    !isValidForm
+                  "
+                >
+                  Only alphabet allowed with space
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="mb-3">
+                <label class="form-label"
+                  >Email<span class="text-danger ms-1">*</span></label
+                >
+                <input type="email" class="form-control" formControlName="email" id="email"
+                [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !editStaffForm.controls['email'].valid
+                  }"/>
+                  <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    editStaffForm.controls['email'].hasError('required') &&
+                    !isValidForm
+                  "
+                >
+                  Please enter email
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    editStaffForm.controls['email'].hasError('pattern') &&
+                    !isValidForm
+                  "
+                >
+                  Please enter valid email
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="mb-3">
+                <label class="form-label"
+                  >Mobile No.<span class="text-danger ms-1">*</span></label
+                >
+                <input type="mobile" class="form-control" formControlName="mobile"
+                [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !editStaffForm.controls['mobile'].valid
+                  }"
+                  minlength="10"
+                  maxlength="10" />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    editStaffForm.controls['mobile'].hasError('required') &&
+                    !isValidForm
+                  "
+                >
+                  Please enter mobile
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    editStaffForm.controls['mobile'].hasError('pattern') &&
+                    !isValidForm
+                  "
+                >
+                  Please enter valid mobile number
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    editStaffForm.controls['mobile'].hasError('minlength') &&
+                    !isValidForm
+                  "
+                >
+                  mobile number should be 10 digits long
+                </div>
+              </div>
+            </div>
+            <div formGroupName="status" class="col-lg-12">
+              <div class="mb-3">
+                <label class="form-label"
+                  >Status<span class="text-danger ms-1">*</span></label
+                >
+                <select class="form-select" required formControlName="id"
+                  [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !editStaffForm.get('status.id')?.valid
+                  }">
+                  <option value="{{ status.id }}" *ngFor="let status of statuses">
+                    {{ status.name }}
+                  </option>
+                </select>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    editStaffForm.get('status.id')?.hasError('required') &&
+                    !isValidForm
+                  "
+                >
+                  Please select a status
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary me-2">
+            <i class="feather icon-edit-2 me-1"></i>Update</button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal()"
+          >
+            <i class="feather icon-x me-1"></i>Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,89 @@
+<div class="excel-filter p-2" style="width: 220px">
+  <div class="mb-2 pb-2 border-bottom">
+    <span class="text-dark fw-semibold">Filter:</span>
+    <span class="text-primary fw-bold ms-1">{{ getColumnDisplayName() }}</span>
+  </div>
+  <input
+    type="text"
+    class="form-control mb-1"
+    placeholder="Search..."
+    [(ngModel)]="searchText"
+    (input)="onSearchChange()"
+  />
+
+  <div class="border p-1 checkbox-list">
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        [checked]="selectAll"
+        [indeterminate]="indeterminate"
+        (change)="onSelectAllChange()"
+        id="selectAll"
+      />
+      <label class="form-check-label" for="selectAll">
+        <strong>Select All</strong>
+      </label>
+    </div>
+
+    <div class="form-check" *ngFor="let option of filteredOptions">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        [checked]="selected.has(option)"
+        (change)="onToggle(option)"
+        [id]="'option-' + option"
+        [disabled]="isValueDisabled(option)"
+      />
+      <label
+        class="form-check-label"
+        [for]="'option-' + option"
+        [class.text-muted]="isValueDisabled(option)"
+        [style.cursor]="isValueDisabled(option) ? 'not-allowed' : 'pointer'"
+      >
+        {{ formatDisplayValue(option) }}
+      </label>
+    </div>
+  </div>
+
+  <div class="mt-2">
+    <div class="row g-2 mb-2">
+      <div class="col-6">
+        <button
+          class="btn btn-sm btn-warning w-100"
+          (click)="clearAllFilters()"
+          [disabled]="!anyGlobalFilterActive"
+          title="Clear all filters in the grid"
+        >
+          Clear All
+        </button>
+      </div>
+      <div class="col-6">
+        <button
+          class="btn btn-sm btn-info w-100"
+          [disabled]="!isFilterActive()"
+          [style.cursor]="isFilterActive() ? 'pointer' : 'not-allowed'"
+          (click)="clearFilterAlternative()"
+        >
+          Clear Filter
+        </button>
+      </div>
+    </div>
+    <div class="row g-2">
+      <div class="col-6">
+        <button
+          class="btn btn-sm btn-success w-100"
+          [disabled]="selected.size === 0"
+          (click)="applyFilter()"
+        >
+          Apply
+        </button>
+      </div>
+      <div class="col-6">
+        <button class="btn btn-sm btn-secondary w-100" (click)="cancelFilter()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

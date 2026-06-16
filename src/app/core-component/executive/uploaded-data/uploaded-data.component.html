@@ -1,0 +1,258 @@
+<div
+  class="card table-list-card"
+  style="
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: -15px -15px 10px -15px;
+  "
+>
+  <div
+    class="card-header d-flex align-items-center justify-content-between flex-wrap p-2"
+    style="gap: 0.5rem; row-gap: 0.5rem; min-height: auto"
+  >
+    <div class="search-set d-flex align-items-center" style="gap: 1.5rem">
+      <h6
+        class="mb-0"
+        style="white-space: nowrap; font-size: 18px; font-weight: 600"
+      >
+        Uploaded Data
+      </h6>
+      <div
+        style="border-left: 2px solid #e0e0e0; height: 28px; margin: 0 1rem"
+      ></div>
+      <div class="input-group input-group-sm">
+        <button
+          [ngClass]="
+            isDateFilterActive
+              ? 'btn btn-success btn-sm rounded ms-2'
+              : 'btn btn-info btn-sm rounded ms-2'
+          "
+          (click)="openDateFilterModal()"
+        >
+          <i
+            [ngClass]="
+              isDateFilterActive ? 'ti ti-filter-check' : 'fa fa-filter'
+            "
+          ></i>
+          {{ isDateFilterActive ? "Filter Active" : "Filter Options" }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm rounded ms-2"
+          [disabled]="!isAnyFilterActive()"
+          (click)="clearAllFilters()"
+          style="background-color: #ff6b6b; color: white"
+        >
+          <i class="ti ti-x me-1"></i>
+          Clear All Filters
+        </button>
+      </div>
+    </div>
+    <div
+      class="d-flex my-xl-auto right-content align-items-center flex-wrap row-gap-3"
+    >
+      <div class="page-btn d-flex me-2" style="gap: 0.5rem">
+        <button
+          *ngIf="userData?.user?.user_type != 'Executive'"
+          type="button"
+          class="btn btn-dark d-flex align-items-center px-3 py-2"
+          [disabled]="!rowsSelected"
+          (click)="bulkView()"
+        >
+          <i class="feather icon-eye feather-eye" style="font-size: 16px"></i
+          >&nbsp; Bulk View
+        </button>
+      </div>
+      <div class="page-btn d-flex" style="gap: 0.5rem">
+        <a
+          *ngIf="
+            !bulkDownloadLoading && userData?.user?.user_type != 'Executive'
+          "
+          class="btn btn-primary d-flex align-items-center px-3 py-2"
+          (click)="bulkDownloadSoList()"
+          style="gap: 8px; font-weight: 500"
+          title="Bulk Download"
+        >
+          <i class="fas fa-download" style="font-size: 16px"></i>
+          Bulk Download
+        </a>
+        <a
+          *ngIf="bulkDownloadLoading"
+          class="btn btn-primary d-flex align-items-center px-3 py-2"
+          style="gap: 8px; font-weight: 500; opacity: 0.8; pointer-events: none"
+        >
+          <i class="fas fa-spinner fa-spin" style="font-size: 16px"></i>
+          Downloading...
+        </a>
+        <!-- <a
+          *ngIf="!downloadExcel"
+          class="btn btn-success d-flex align-items-center px-3 py-2"
+          (click)="exportToExcel()"
+          style="gap: 8px; font-weight: 500"
+        >
+          <img
+            src="assets/img/icons/excel1.svg"
+            alt="Excel Icon"
+            style="width: 20px; height: 20px"
+          />
+          Download
+        </a>
+        <a
+          *ngIf="downloadExcel"
+          class="btn btn-success d-flex align-items-center px-3 py-2"
+          style="gap: 8px; font-weight: 500; opacity: 0.8; pointer-events: none"
+        >
+          <i class="fas fa-spinner fa-spin" style="font-size: 16px"></i>
+          Downloading...
+        </a> -->
+      </div>
+    </div>
+  </div>
+  <div style="flex: 1; overflow: hidden; padding: 0.5rem">
+    <div
+      class="ag-theme-alpine"
+      style="width: 100%; height: 100%; font-size: 12px"
+    >
+      <ag-grid-angular
+        style="width: 100%; height: 100%"
+        [rowData]="loading ? [] : filteredUploadedData"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [gridOptions]="gridOptions"
+        [suppressRowClickSelection]="true"
+        [rowSelection]="'multiple'"
+        [domLayout]="'normal'"
+        class="ag-theme-alpine"
+        (gridReady)="onGridReady($event)"
+        [suppressNoRowsOverlay]="loading"
+      >
+      </ag-grid-angular>
+    </div>
+  </div>
+</div>
+
+<ng-template #dateFilterModal let-modal>
+  <div class="modal-content">
+    <div class="modal-header py-2">
+      <h6 class="mb-0">Advanced Filters</h6>
+      <button type="button" class="close" (click)="modal.dismiss('cancelled')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body overflow-auto" style="max-height: 70vh">
+      <div class="mb-4">
+        <label class="form-label fw-semibold"
+          >Select Year
+          <span
+            class="spinner-border text-primary me-1 ms-2"
+            style="width: 1rem; height: 1rem"
+            *ngIf="isLoadYear"
+          ></span>
+        </label>
+        <div class="position-relative">
+          <select
+            class="form-select mb-3"
+            aria-label="Select Year"
+            [(ngModel)]="tempFilter.year"
+            (change)="onYearChange($event)"
+          >
+            <option [value]="null">All Years</option>
+            <option [value]="year.year" *ngFor="let year of years">
+              {{ year.year }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Select Month</label>
+        <div class="position-relative">
+          <select
+            class="form-select mb-3"
+            aria-label="Select Month"
+            [(ngModel)]="tempFilter.month"
+            (change)="onMonthChange($event)"
+          >
+            <option [value]="null">All Months</option>
+            <option [value]="month.month_no" *ngFor="let month of months">
+              {{ month.month }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="form-label fw-semibold"
+          >Select Brand
+          <span
+            class="spinner-border text-primary me-1 ms-2"
+            style="width: 1rem; height: 1rem"
+            *ngIf="isLoadBrand"
+          ></span>
+        </label>
+        <div class="position-relative">
+          <select
+            class="form-select"
+            aria-label="Select Brand"
+            [(ngModel)]="tempFilter.brand"
+          >
+            <option [value]="null">All Brands</option>
+            <option [value]="brand.brand_code" *ngFor="let brand of brands">
+              {{ brand.brand_code }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Uploaded On</label>
+        <div class="position-relative">
+          <input
+            type="text"
+            bsDaterangepicker
+            class="form-control form-control-sm"
+            [bsConfig]="bsDateConfig"
+            placeholder="Select Uploaded On Date Range"
+            [(ngModel)]="tempFilter.dateRange"
+            placement="top"
+          />
+          <i
+            *ngIf="tempUploadedOnRange"
+            class="ti-close position-absolute top-50 translate-middle-y end-0 me-2 text-muted cursor-pointer"
+            style="font-size: 0.9rem"
+            (click)="tempUploadedOnRange = null"
+          ></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer d-flex justify-content-end pt-2 pb-2 border-top">
+      <button
+        class="btn btn-sm btn-secondary me-2"
+        (click)="resetTempDateFields(modal)"
+        type="button"
+      >
+        <i class="ti ti-rotate me-1"></i>Reset
+      </button>
+      <button
+        *ngIf="!applyDateFilterClicked"
+        class="btn btn-sm btn-success"
+        (click)="applyDateFilter(modal)"
+        type="button"
+      >
+        <i class="ti ti-adjustments me-1"></i>Apply
+      </button>
+
+      <button
+        *ngIf="applyDateFilterClicked"
+        class="btn btn-sm btn-success"
+        type="button"
+      >
+        <i
+          class="spinner-border text-primary me-1 ms-2"
+          style="width: 1rem; height: 1rem"
+        ></i
+        >Applying...
+      </button>
+    </div>
+  </div>
+</ng-template>

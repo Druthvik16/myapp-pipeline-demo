@@ -1,0 +1,15 @@
+.sticky-th {
+  position: sticky;
+  top: 0;
+  background-color: #D3D3D3 !important;
+  z-index: 5;
+}
+::ng-deep .date-filter-modal {
+  .modal-dialog {
+    margin: 1rem auto;
+  }
+  
+  .bs-datepicker {
+    z-index: 1060 !important; // Ensure datepicker appears above modal
+  }
+}

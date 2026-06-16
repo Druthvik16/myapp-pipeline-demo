@@ -1,0 +1,18 @@
+.excel-header-1 th {
+  background-color: #D3D3D3 !important;
+  color: #2c3e50 !important;
+  font-weight: 500 !important;
+  position: sticky;
+  top: 1;
+  z-index: 10;
+  border: 1px solid #696969 !important
+}
+
+.excel-header-2 th {
+  background-color: #696969 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  position: sticky;
+  top: 19px; 
+  z-index: 9;
+}

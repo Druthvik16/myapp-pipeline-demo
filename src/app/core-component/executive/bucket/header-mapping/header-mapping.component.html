@@ -1,0 +1,154 @@
+<div
+  class="modal-content d-flex flex-column"
+  style="max-height: 95vh; overflow-y: auto"
+>
+  <div class="modal-header d-flex justify-content-between align-items-start">
+    <div class="page-title">
+      <h6 class="mb-1">Map File Headers -</h6>
+      <div class="d-flex align-items-center">
+        <span class="text-muted text-dark p-1 rounded bg-gray-100">
+          {{ fileName }}
+        </span>
+        <div
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm text-primary ms-2"
+          role="status"
+        ></div>
+      </div>
+    </div>
+    <button
+      type="button"
+      class="close ms-3"
+      (click)="closeModal()"
+      style="margin-top: -5px"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <!-- File Lock Status Alert -->
+  <div *ngIf="isFileLocked" class="lock-banner mx-4 mt-2" role="alert">
+    <div class="lock-banner-content">
+      <i class="fas fa-lock me-2"></i>
+      <span class="lock-message-text">{{ lockMessage }}</span>
+    </div>
+  </div>
+
+  <div class="px-4" style="flex: 1">
+    <div class="table-responsive mx-auto" style="max-width: 800px">
+      <table
+        class="table table-bordered table-sm text-center align-middle mb-0"
+      >
+        <thead class="thead-light bg-light">
+          <tr>
+            <th class="small">Standard Header</th>
+            <th class="small">Mapped File Header</th>
+            <th class="small"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of mappedHeaders">
+            <td class="small">{{ row.standard_header }}</td>
+            <td class="small">{{ row.mapped_file_header || "-" }}</td>
+            <td class="small">
+              <a
+                (click)="
+                  !isFileLocked && openHeaderMappingFormatter(
+                    row.mapped_file_header,
+                    row.standard_header
+                  )
+                "
+                class="p-1"
+                style="cursor: pointer; text-decoration: none; color: inherit"
+                [class.text-muted]="isFileLocked"
+                [style.cursor]="isFileLocked ? 'not-allowed' : 'pointer'"
+                [title]="
+                  isFileLocked
+                    ? 'File is locked by another user'
+                    : 'Edit mapping'
+                "
+              >
+                <i class="feather icon-plus-circle feather-plus-circle"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div
+      *ngIf="!loading && mappedHeaders.length === 0"
+      class="text-center mt-3"
+    >
+      <p class="text-muted">No data available</p>
+    </div>
+    <div class="my-3"></div>
+  </div>
+  <div *ngIf="userData?.user?.user_type != 'Team Lead'" class="modal-footer justify-content-end px-4 py-2">
+    <button
+      *ngIf="!saveClicked"
+      (click)="saveMappedData()"
+      type="button"
+      class="btn btn-info btn-sm"
+      [disabled]="!allHeadersMapped || areButtonsDisabled"
+      [title]="
+        isFileLocked
+          ? 'File is locked by another user'
+          : !allHeadersMapped
+          ? 'Please map all headers first'
+          : 'Send for pre-scan approval'
+      "
+    >
+      <i class="fas fa-paper-plane me-1"></i>
+      Send for Pre-Scan Approval
+    </button>
+    <button *ngIf="saveClicked" class="btn btn-info btn-sm" disabled>
+      <span class="spinner-border spinner-border-sm" role="status"></span>
+      &nbsp;Submitting...
+    </button>
+    <button
+      (click)="rejectWithReason()"
+      type="button"
+      class="btn btn-danger btn-sm ms-2"
+      [disabled]="areButtonsDisabled"
+      [title]="
+        isFileLocked ? 'File is locked by another user' : 'Reject with reason'
+      "
+    >
+      <i class="fas fa-times me-1"></i>
+      Reject with Reason
+    </button>
+  </div>
+</div>
+
+<!-- Reject Reason Modal -->
+<ng-template #reasonModal let-modal>
+  <div class="modal-content">
+    <div class="modal-header py-2">
+      <h6 class="mb-0">Provide Rejection Reason</h6>
+      <button
+        type="button"
+        class="close"
+        (click)="modal.dismiss('user-cancelled')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <label class="form-label fw-semibold">Select Reason</label>
+        <div class="position-relative">
+          <select class="form-select mb-3" [(ngModel)]="rejectionReason"
+          aria-label="Select Reason">
+          <option [value]="''">All Reasons</option>
+            <option [value]="reason.remark" *ngFor="let reason of reasonsLists">
+              {{reason.remark}}</option>
+          </select>
+        </div>
+      <div class="d-grid gap-2">
+        <button class="btn btn-sm btn-danger" (click)="submitReason(modal)">
+          Select Reason & Reject
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

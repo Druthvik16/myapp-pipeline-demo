@@ -1,0 +1,131 @@
+<div class="page-header">
+  <div class="add-item d-flex">
+    <div class="page-title">
+      <h4>CN Updation</h4>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <ul
+      #nav="ngbNav"
+      ngbNav
+      class="nav nav-tabs nav-tabs-solid nav-tabs-rounded mb-3"
+    >
+      <li [ngbNavItem]="1" class="nav-item">
+        <a
+          class="nav-link active"
+          href="#solid-rounded-tab1"
+          data-bs-toggle="tab"
+          >Upload Doc</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#solid-rounded-tab2" data-bs-toggle="tab"
+          >Upload Doc Logs</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#solid-rounded-tab3" data-bs-toggle="tab"
+          >Partner Onboarding Logs</a
+        >
+      </li>
+    </ul>
+    <div class="tab-content">
+        <br/>
+      <div class="tab-pane show active" id="solid-rounded-tab1">
+        <form
+          [formGroup]="uploadDocForm"
+          class="row g-3 needs-validation"
+          novalidate
+          autocomplete="off"
+        >
+          <div class="row">
+            <div class="col-md-2" *ngFor="let fileType of fileTypes">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  required
+                  type="radio"
+                  formControlName="fileType"
+                  [value]="fileType"
+                  (change)="onFileTypeChange(fileType)"
+                />
+                <label class="form-check-label">
+                  {{ fileType }}
+                </label>
+              </div>
+            </div>
+            <br />
+            <div
+              class="text-danger p-2"
+              style="font-size: 0.9em"
+              *ngIf="
+                uploadDocForm.controls['fileType'].hasError('required') &&
+                !isValidForm
+              "
+            >
+              Please select the file type
+            </div>
+            <br />
+          </div>
+          <br />
+          <div class="row">
+            <div class="col-md-12">
+              <label for="selectedFile" class="form-label"
+                >Select File&nbsp;<span class="text-danger">*</span></label
+              >
+              <input
+                multiple
+                class="form-control"
+                type="file"
+                required
+                id="selectedFile"
+                formControlName="selectedFile"
+                [ngClass]="{
+                  'is-invalid':
+                    !isValidForm &&
+                    !uploadDocForm.controls['selectedFile'].valid
+                }"
+                (change)="checkFile($event)"
+                [accept]="
+                  uploadDocForm.get('fileType')?.value ==
+                    'Credit Note PDF File' ||
+                  uploadDocForm.get('fileType')?.value == 'Invoice PDF'
+                    ? 'application/pdf'
+                    : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/csv'
+                "
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  uploadDocForm.controls['selectedFile'].hasError('required') &&
+                  !isValidForm
+                "
+              >
+                Please select file
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <label
+                for="selectedFile"
+                class="form-label"
+                style="margin-top: 2.2rem !important"
+                >&nbsp;</label
+              >
+              <button class="btn rounded-pill btn-primary" type="submit">
+                <i class="mdi mdi-barcode"></i>&nbsp;Upload File
+              </button>
+            </div>
+          </div>
+        </form>
+        <br />
+      </div>
+      <div class="tab-pane" id="solid-rounded-tab2">Tab content 2</div>
+      <div class="tab-pane" id="solid-rounded-tab3">Tab content 3</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+<div class="account-content">
+  <div class="row login-wrapper m-0">
+    <div class="col-lg-6 p-0">
+      <div class="login-img">
+        <img src="assets/img/authentication/authentication-01.svg" alt="img" />
+      </div>
+    </div>
+    <div class="col-lg-6 p-0">
+      <div class="login-content">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="login-userset">
+            <div class="login-logo logo-normal">
+              <img src="assets/img/logo-infomap.jpg" alt="img" />
+            </div>
+            <a [routerLink]="routes.index" class="login-logo logo-white">
+              <img src="assets/img/logo-white.svg" alt="Img" />
+            </a>
+            <div class="login-userheading">
+              <h3>Sign In</h3>
+              <h4>To Infomap using your Email and Password.</h4>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email Address</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Email"
+                  formControlName="username"
+                  [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !loginForm.controls['username'].valid
+                  }"
+                />
+                <span class="input-group-text border-start-0">
+                  <i class="ti ti-mail"></i>
+                </span>
+              </div>
+              <div
+                *ngIf="!isValidForm && loginForm.controls['username'].errors"
+                class="invalid-feedback d-block"
+              >
+                <span *ngIf="loginForm.controls['username'].hasError('required')"
+                  >Please Enter Email</span
+                >
+                <span
+                  *ngIf="
+                    loginForm.controls['username'].hasError('pattern') &&
+                    !loginForm.controls['username'].hasError('required')
+                  "
+                >
+                  Please enter valid email
+                </span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <div class="input-group">
+                <input
+                  [type]="password[1] ? 'text' : 'password'"
+                  class="pass-input form-control"
+                  placeholder="Password"
+                  formControlName="password"
+                  [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !loginForm.controls['password'].valid
+                  }"
+                />
+                <span
+                  class="input-group-text"
+                  style="cursor: pointer"
+                  (click)="togglePassword(1)"
+                >
+                  <i [class]="password[1] ? 'ti ti-eye' : 'ti ti-eye-off'"></i>
+                </span>
+              </div>
+              <div
+                *ngIf="
+                  !isValidForm &&
+                  loginForm.controls['password'].hasError('required')
+                "
+                class="invalid-feedback d-block"
+              >
+                Please Enter Password
+              </div>
+            </div>
+            <div class="form-login">
+              <button
+                type="submit"
+                class="btn btn-login"
+                *ngIf="!signinClicked"
+              >
+                Sign In
+              </button>
+               <button *ngIf="signinClicked" type="button" class="btn btn-login">Signing In...<i class="fas fa-spinner fa-spin me-2"></i></button>
+            </div>
+            <div class="form-sociallink">
+              <div
+                class="d-flex align-items-center justify-content-center flex-wrap"
+              >
+              </div>
+              <div
+                class="my-4 d-flex justify-content-center align-items-center copyright-text"
+              >
+                <p>Copyright &copy; 2025 Infomap</p>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

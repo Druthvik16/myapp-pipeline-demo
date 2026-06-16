@@ -1,0 +1,341 @@
+<div>
+  <div class="">
+    <div class="">
+      <div class="modal-header">
+        <div class="page-title">
+          <h4>Create Client</h4>
+        </div>
+        <button type="button" class="close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form [formGroup]="addClientForm" (ngSubmit)="saveClient()">
+        <div class="modal-body">
+          <div class="new-employee-field">
+            <div class="profile-pic-upload">
+              <div class="profile-pic" [ngClass]="{
+                  'border border-danger rounded':
+                    addClientForm.controls['logo'].invalid && !isValidForm
+                }">
+                <div class="image-upload-container" (click)="triggerFileUpload()">
+                  <img *ngIf="imagePreview" [src]="imagePreview" class="image-preview" alt="Client Logo Preview" />
+                  <div *ngIf="!imagePreview">
+                    <span><i class="plus-down-add">+</i> Add Image</span>
+                  </div>
+                </div>
+                <i *ngIf="imagePreview"
+                  class="ti ti-x position-absolute top-0 end-0 bg-danger text-white rounded-circle d-flex align-items-center justify-content-center"
+                  (click)="removeImage($event)" style="
+                    width: 24px;
+                    height: 24px;
+                    margin-top: -8px;
+                    margin-right: -8px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    z-index: 10;
+                  " aria-label="Remove uploaded image" title="Remove image"></i>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Upload Client Logo<span class="text-danger ms-1">*</span></label>
+                <div class="image-upload mb-0">
+                  <input type="file" class="form-control" id="logo" accept="image/png, image/jpeg"
+                    (change)="onFileChange($event)" [ngClass]="{
+                      'is-invalid':
+                        addClientForm.controls['logo'].invalid && !isValidForm
+                    }" />
+                  <div class="invalid-feedback" *ngIf="
+                      addClientForm.controls['logo'].hasError('required') &&
+                      !isValidForm
+                    ">
+                    An image is required.
+                  </div>
+                  <div class="invalid-feedback" *ngIf="
+                      addClientForm.controls['logo'].hasError(
+                        'invalidFileType'
+                      ) && !isValidForm
+                    ">
+                    Invalid file type. Please upload a JPEG or PNG image.
+                  </div>
+                  <div class="invalid-feedback" *ngIf="
+                      addClientForm.controls['logo'].hasError(
+                        'invalidFileSize'
+                      ) && !isValidForm
+                    ">
+                    File is too large. Maximum size is 4 MB.
+                  </div>
+                  <div class="image-uploads" (click)="triggerFileUpload()" style="cursor: pointer;">
+                    <i class="fas fa-upload me-2" style="color: #ffffff;"></i>
+                    <h4 class="d-inline">Upload Image</h4>
+                  </div>
+                </div>
+                <p class="mt-3">JPEG, PNG up to 4 MB</p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Name<span class="text-danger ms-1">*</span></label>
+                <input type="text" class="form-control" id="name" required formControlName="name" [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !addClientForm.controls['name'].valid
+                  }" maxLength="50" />
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['name'].hasError('required') &&
+                    !isValidForm
+                  ">
+                  Please enter name
+                </div>
+
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['name'].hasError('pattern') &&
+                    !isValidForm
+                  ">
+                  Only alphabet allowed with space
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Short Name<span class="text-danger ms-1">*</span></label>
+                <input type="text" id="shortName" required formControlName="shortName" class="form-control" [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !addClientForm.controls['shortName'].valid
+                  }" maxlength="50" />
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['shortName'].hasError('required') &&
+                    !isValidForm
+                  ">
+                  Please enter shortname
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Client Code<span class="text-danger ms-1">*</span></label>
+                <input type="text" class="form-control" formControlName="code" id="code" [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !addClientForm.controls['code'].valid
+                  }" />
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['code'].hasError('required') &&
+                    !isValidForm
+                  ">
+                  Please enter client code
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Email<span class="text-danger ms-1">*</span></label>
+                <input type="email" formControlName="email" class="form-control" id="email" [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !addClientForm.controls['email'].valid
+                  }" />
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['email'].hasError('required') &&
+                    !isValidForm
+                  ">
+                  Please enter email
+                </div>
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['email'].hasError('pattern') &&
+                    !isValidForm
+                  ">
+                  Please enter valid email
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="mb-3">
+                <label class="form-label">GST Number<span class="text-danger ms-1">*</span></label>
+                <input type="text" formControlName="gstin" id="gstin" required class="form-control"
+                  (input)="changeToUpperCase($event, 'gstin')" [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !addClientForm.controls['gstin'].valid
+                  }" minlength="15" maxLength="15" />
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['gstin'].hasError('required') &&
+                    !isValidForm
+                  ">
+                  Please enter gst number
+                </div>
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['gstin'].hasError('pattern') &&
+                    !isValidForm
+                  ">
+                  Please enter valid gst number format
+                </div>
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['gstin'].hasError('minlength') &&
+                    !isValidForm
+                  ">
+                  Gst number should have 15 characters
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Pan Number<span class="text-danger ms-1">*</span></label>
+                <input type="text" id="pan" required formControlName="pan" class="form-control"
+                  (input)="changeToUpperCase($event, 'pan')" [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !addClientForm.controls['pan'].valid
+                  }" minlength="10" maxlength="10" />
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['pan'].hasError('required') &&
+                    !isValidForm
+                  ">
+                  Please enter pan number
+                </div>
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['pan'].hasError('pattern') &&
+                    !isValidForm
+                  ">
+                  Please enter valid pan number format
+                </div>
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['pan'].hasError('minlength') &&
+                    !isValidForm
+                  ">
+                  Pan number should have 10 characters
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Mobile Number<span class="text-danger ms-1">*</span></label>
+                <input type="text" id="mobile" required formControlName="mobile" class="form-control" [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !addClientForm.controls['mobile'].valid
+                  }" minlength="10" maxlength="10" />
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['mobile'].hasError('required') &&
+                    !isValidForm
+                  ">
+                  Please enter mobile
+                </div>
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['mobile'].hasError('pattern') &&
+                    !isValidForm
+                  ">
+                  Please enter valid mobile number
+                </div>
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['mobile'].hasError('minlength') &&
+                    !isValidForm
+                  ">
+                  Mobile number should be 10 digits long
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="mb-3">
+                <label for="addressLine1" class="form-label">Address Line 1&nbsp;<span
+                    class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="addressLine1" formControlName="addressLine1" [ngClass]="{
+                    'is-invalid':
+                      !isValidForm &&
+                      !addClientForm.controls['addressLine1'].valid
+                  }" maxlength="200" />
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['addressLine1'].hasError(
+                      'required'
+                    ) && !isValidForm
+                  ">
+                  Please enter address line 1
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="mb-3">
+                <label class="form-label">CIN Number<span class="text-danger ms-1">*</span></label>
+                <input type="text" id="cin" required formControlName="cin" class="form-control"
+                  (input)="changeToUpperCase($event, 'cin')" [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !addClientForm.controls['cin'].valid
+                  }" minlength="21" maxlength="21" />
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['cin'].hasError('required') &&
+                    !isValidForm
+                  ">
+                  Please enter cin number
+                </div>
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['cin'].hasError('pattern') &&
+                    !isValidForm
+                  ">
+                  Please enter valid cin
+                </div>
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['cin'].hasError('minlength') ||
+                    (addClientForm.controls['cin'].hasError('maxlength') &&
+                      !isValidForm)
+                  ">
+                  CIN should have 21 characters
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="mb-3">
+                <label for="addressline2" class="form-label">Address Line 2<span
+                    class="text-danger ms-1">*</span></label>
+                <input type="text" formControlName="addressLine2" class="form-control" id="addressLine2" [ngClass]="{
+                    'is-invalid':
+                      !isValidForm &&
+                      !addClientForm.controls['addressLine2'].valid
+                  }" />
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['addressLine2'].hasError(
+                      'required'
+                    ) && !isValidForm
+                  ">
+                  Please enter addressLine2
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Country<span class="text-danger ms-1">*</span></label>
+                <input type="text" id="country" required formControlName="country" class="form-control" [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !addClientForm.controls['country'].valid
+                  }" maxlength="50" />
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['country'].hasError('required') &&
+                    !isValidForm
+                  ">
+                  Please enter country
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="mb-3">
+                <label class="form-label">State<span class="text-danger ms-1">*</span></label>
+                <input type="text" id="state" required formControlName="state" class="form-control" [ngClass]="{
+                    'is-invalid':
+                      !isValidForm && !addClientForm.controls['state'].valid
+                  }" maxlength="50" />
+                <div class="invalid-feedback" *ngIf="
+                    addClientForm.controls['state'].hasError('required') &&
+                    !isValidForm
+                  ">
+                  Please enter state
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary me-2">
+            <i class="feather icon-check me-1"></i> Save
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">
+            <i class="feather icon-x me-1"></i> Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

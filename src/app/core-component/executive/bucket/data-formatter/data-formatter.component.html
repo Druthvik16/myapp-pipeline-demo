@@ -1,0 +1,450 @@
+<div class="modal-content" style="flex-direction: column; height: 100vh">
+  <div class="modal-header">
+    <div class="page-title d-flex align-items-center gap-2">
+      <h6 class="fw-bold mb-0">
+        Formatting Raw Uploaded Data –
+        <span class="text-dark ms-2 p-1 rounded bg-gray-200 fw-semibold">
+          {{ fileName }}
+        </span>
+      </h6>
+      <h6 class="fw-bold mb-0">Review, Edit & Save</h6>
+      <div
+        *ngIf="loading"
+        class="spinner-border text-primary"
+        style="width: 1rem; height: 1rem"
+      ></div>
+      <div *ngIf="isFileLocked" class="d-flex align-items-center gap-2 ms-4">
+        <i
+          class="fas fa-lock"
+          style="color: #6f42c1"
+          title="{{ lockMessage }}"
+        ></i>
+        <small class="fw-bold" style="color: #6f42c1">{{ lockMessage }}</small>
+      </div>
+    </div>
+    <button type="button" class="close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="card-header">
+    <div class="d-flex justify-content-between align-items-center gap-2 px-3">
+      <div class="gap-2" style="margin-top: 0.75rem">
+        <button
+          *ngIf="userData?.user?.user_type != 'Team Lead'"
+          type="button"
+          class="btn btn-sm me-2"
+          [disabled]="isDeleteDisabled || areButtonsDisabled"
+          [class.disabled]="isDeleteDisabled || areButtonsDisabled"
+          [style.opacity]="isDeleteDisabled || areButtonsDisabled ? '0.5' : '1'"
+          (click)="deleteSelectedRows()"
+          style="background-color: #b22222; color: white"
+        >
+          <i class="fas fa-trash-alt me-1"></i>
+          Delete Selected Rows
+        </button>
+        <button
+          *ngIf="
+            showUpdateMapperButton && userData?.user?.user_type != 'Team Lead'
+          "
+          type="button"
+          class="btn btn-info btn-sm me-2"
+          [disabled]="!updateMapperEnabled || areButtonsDisabled"
+          [style.opacity]="
+            !updateMapperEnabled || areButtonsDisabled ? '0.5' : '1'
+          "
+          (click)="openReplaceModal()"
+        >
+          <i class="fas fa-sync-alt me-1"></i>
+          Update Brands
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm me-2"
+          [disabled]="!anyFilterActive"
+          style="background-color: #ff6b6b; color: white"
+          [style.opacity]="!anyFilterActive ? '0.5' : '1'"
+          (click)="clearAllFilters()"
+        >
+          <i class="feather icon-x"></i>
+          Clear All Filters
+        </button>
+        <button
+          *ngIf="!isEANValidated"
+          type="button"
+          class="btn ean-btn btn-sm me-2"
+          (click)="openEanValidateModal()"
+          [disabled]="areButtonsDisabled"
+        >
+          <i class="fas fa-barcode me-1"></i>
+          EAN Validate
+        </button>
+      </div>
+      <div
+        *ngIf="userData?.user?.user_type != 'Team Lead'"
+        class="d-flex gap-2"
+        style="margin-top: 0.75rem"
+      >
+        <div
+          *ngIf="!isEanValidationDisabled"
+          class="position-relative d-inline-block me-2"
+          style="max-width: 150px"
+        >
+          <input
+            type="text"
+            placeholder="Select Month"
+            class="form-control form-control-sm"
+            bsDatepicker
+            [bsConfig]="monthPickerConfig"
+            [(ngModel)]="selectedMonth"
+            [ngModelOptions]="{ standalone: true }"
+            [disabled]="areButtonsDisabled"
+            [style.opacity]="areButtonsDisabled ? '0.5' : '1'"
+            (ngModelChange)="onMonthOrYearChange()"
+          />
+          <button
+            type="button"
+            class="btn btn-sm btn-light text-danger position-absolute top-50 end-0 translate-middle-y me-1 px-1 py-0"
+            *ngIf="selectedMonth && !areButtonsDisabled"
+            (click)="clearMonth()"
+            style="z-index: 10"
+          >
+            ×
+          </button>
+        </div>
+        <div
+          *ngIf="!isEanValidationDisabled"
+          class="position-relative d-inline-block"
+          style="max-width: 130px"
+        >
+          <input
+            type="text"
+            placeholder="Select Year"
+            class="form-control form-control-sm"
+            bsDatepicker
+            [bsConfig]="yearPickerConfig"
+            [(ngModel)]="selectedYear"
+            [disabled]="areButtonsDisabled"
+            [style.opacity]="areButtonsDisabled ? '0.5' : '1'"
+            (ngModelChange)="onMonthOrYearChange()"
+            [ngModelOptions]="{ standalone: true }"
+          />
+          <button
+            type="button"
+            class="btn btn-sm btn-light text-danger position-absolute top-50 end-0 translate-middle-y me-1 px-1 py-0"
+            *ngIf="selectedYear && !areButtonsDisabled"
+            (click)="clearYear()"
+            style="z-index: 10"
+          >
+            ×
+          </button>
+        </div>
+        <button
+          *ngIf="!isEanValidationDisabled"
+          (click)="saveData()"
+          type="button"
+          class="btn btn-success btn-sm"
+          [disabled]="areButtonsDisabled"
+          [style.opacity]="areButtonsDisabled ? '0.5' : '1'"
+        >
+          <i class="fas fa-save me-1"></i>
+          <span
+            *ngIf="processing && processingType === 'save'"
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          <span *ngIf="processing && processingType === 'save'">
+            &nbsp;Saving... [Process may take few minute(s)]
+          </span>
+          <span *ngIf="!processing || processingType === 'reject'">Save</span>
+        </button>
+        <button
+          (click)="rejectData()"
+          type="button"
+          class="btn btn-danger btn-sm"
+          [disabled]="areButtonsDisabled"
+          [style.opacity]="areButtonsDisabled ? '0.5' : '1'"
+        >
+          <i class="fas fa-times me-1"></i>
+          <span
+            *ngIf="processing && processingType === 'reject'"
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          <span *ngIf="processing && processingType === 'reject'">
+            &nbsp;Rejecting... [Process may take few minute(s)]
+          </span>
+          <span *ngIf="!processing || processingType === 'save'"
+            >Reject With Reason</span
+          >
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal-body-scrollable"
+    style="flex: 1; overflow-y: auto; padding: 1rem"
+  >
+    <div *ngIf="loading" class="loading-overlay">
+      <em>Loading File...</em>
+    </div>
+
+    <div *ngIf="!loading && rowData.length === 0" class="text-center p-3">
+      <em>No data available.</em>
+    </div>
+
+    <div *ngIf="isFileLocked && !loading" class="lock-banner">
+      <div class="lock-banner-content">
+        <i class="fas fa-lock me-2"></i>
+        <span class="lock-message-text">{{ lockMessage }}</span>
+        <small class="ms-2 lock-sub-text"
+          >• Please wait for editing to complete</small
+        >
+      </div>
+    </div>
+    <ag-grid-angular
+      *ngIf="!loading && rowData.length > 0"
+      #agGrid
+      class="ag-theme-alpine"
+      style="width: 100%; height: 100%; overflow: auto"
+      [gridOptions]="gridOptions"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [rowData]="rowData"
+      [enableCellTextSelection]="true"
+      (gridReady)="onGridReady($event)"
+      (modelUpdated)="onModelUpdated()"
+    >
+    </ag-grid-angular>
+  </div>
+</div>
+
+<ng-template #reasonModal let-modal>
+  <div class="modal-content">
+    <div class="modal-header py-2">
+      <h6 class="mb-0">Provide Rejection Reason</h6>
+      <button
+        type="button"
+        class="close"
+        (click)="modal.dismiss('user-cancelled')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Select Reason</label>
+        <div class="position-relative">
+          <select
+            class="form-select mb-3"
+            [(ngModel)]="rejectionReason"
+            aria-label="Select Reason"
+          >
+            <option [value]="''">All Reasons</option>
+            <option [value]="reason.remark" *ngFor="let reason of reasonsLists">
+              {{ reason.remark }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="d-grid gap-2">
+        <button
+          class="btn btn-sm btn-danger"
+          (click)="submitReason(modal)"
+          [disabled]="!rejectionReason"
+        >
+          Select Reason & Reject
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #replaceModal let-modal>
+  <div class="modal-content">
+    <div class="modal-header py-2">
+      <h6 class="mb-0">Replace Brand Mapping</h6>
+      <button
+        type="button"
+        class="close"
+        (click)="modal.dismiss('user-cancelled')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <form [formGroup]="replaceForm" (ngSubmit)="submitReplaceForm(modal)">
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">
+            Select Brand Header <span class="text-danger ms-1">*</span>
+          </label>
+          <select
+            class="form-select"
+            required
+            formControlName="brandColumn"
+            [ngClass]="{
+              'is-invalid':
+                !isReplaceFormValid && !replaceForm.get('brandColumn')?.valid
+            }"
+          >
+            <option value="">Select Brand Header</option>
+            <option *ngFor="let col of columnHeaders" [value]="col">
+              {{ col }}
+            </option>
+          </select>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              replaceForm.get('brandColumn')?.hasError('required') &&
+              !isReplaceFormValid
+            "
+          >
+            Please select a column
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">
+            Select Brand <span class="text-danger">*</span>
+          </label>
+          <select
+            class="form-select"
+            formControlName="brandValue"
+            [ngClass]="{
+              'is-invalid':
+                !isReplaceFormValid && !replaceForm.get('brandValue')?.valid
+            }"
+          >
+            <option value="">Select Brand Header</option>
+            <option *ngFor="let brand of brandOptions" [value]="brand.name">
+              {{ brand.name }}
+            </option>
+          </select>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              replaceForm.get('brandValue')?.hasError('required') &&
+              !isReplaceFormValid
+            "
+          >
+            Please select a brand
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer py-2">
+        <button
+          type="button"
+          class="btn btn-secondary me-2"
+          (click)="modal.dismiss('user-cancelled')"
+        >
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #eanValidateModal let-modal>
+  <div class="modal-content">
+    <div class="modal-header py-2">
+      <h6 class="mb-0">EAN Validation</h6>
+      <button
+        type="button"
+        class="close"
+        (click)="modal.dismiss('user-cancelled')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <form
+      [formGroup]="eanValidateForm"
+      (ngSubmit)="submitEanValidateForm(modal)"
+    >
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">
+            Select Brand Column <span class="text-danger ms-1">*</span>
+          </label>
+          <select
+            class="form-select"
+            required
+            formControlName="brandColumn"
+            [ngClass]="{
+              'is-invalid':
+                !isEanValidateFormValid &&
+                !eanValidateForm.get('brandColumn')?.valid
+            }"
+          >
+            <option value="">Select Brand Column</option>
+            <option *ngFor="let col of columnHeaders" [value]="col">
+              {{ col }}
+            </option>
+          </select>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              eanValidateForm.get('brandColumn')?.hasError('required') &&
+              !isEanValidateFormValid
+            "
+          >
+            Please select a brand column
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">
+            Select EAN Column <span class="text-danger">*</span>
+          </label>
+          <select
+            class="form-select"
+            formControlName="eanColumn"
+            [ngClass]="{
+              'is-invalid':
+                !isEanValidateFormValid &&
+                !eanValidateForm.get('eanColumn')?.valid
+            }"
+          >
+            <option value="">Select EAN Column</option>
+            <option *ngFor="let col of columnHeaders" [value]="col">
+              {{ col }}
+            </option>
+          </select>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              eanValidateForm.get('eanColumn')?.hasError('required') &&
+              !isEanValidateFormValid
+            "
+          >
+            Please select an EAN column
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer py-2">
+        <button
+          type="button"
+          class="btn btn-secondary me-2"
+          (click)="modal.dismiss('user-cancelled')"
+        >
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary">
+          <span
+            *ngIf="processing && processingType === 'validate'"
+            class="spinner-border spinner-border-sm me-1"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          <span *ngIf="processing && processingType === 'validate'">
+            Validating...
+          </span>
+          <span *ngIf="!processing || processingType !== 'validate'">
+            Validate
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>

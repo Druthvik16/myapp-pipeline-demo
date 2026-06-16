@@ -1,0 +1,96 @@
+<div>
+  <div class="modal-header">
+    <div class="page-title">
+      <h4>Product Upload</h4>
+    </div>
+  </div>
+  <form [formGroup]="uploadProductForm" (ngSubmit)="scanProductFile()">
+    <div class="modal-body">
+      <div class="row">
+        <div class="mb-3">
+          <label class="form-label"
+            >Client<span class="text-danger ms-1">*</span></label
+          >
+          <select
+            class="form-select"
+            required
+            formControlName="clientUuid"
+            [ngClass]="{
+              'is-invalid':
+                !isValidForm && !uploadProductForm.get('clientUuid')?.valid
+            }"
+          >
+            <option value="{{ client.uuid }}" *ngFor="let client of clients">
+              {{ client.name }}
+            </option>
+          </select>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              uploadProductForm.get('clientUuid')?.hasError('required') &&
+              !isValidForm
+            "
+          >
+            Please select a client
+          </div>
+        </div>
+        <div class="row">
+            <div class="mb-3">
+          <label for="storeFile" class="form-label"
+            >Select File&nbsp;[Accept Only .xlsx File]&nbsp;<span
+              class="text-danger"
+              >*</span
+            ></label
+          >
+          <input
+            class="form-control"
+            type="file"
+            required
+            id="productFile"
+            formControlName="productFile"
+            [ngClass]="{
+              'is-invalid':
+                !isValidForm && !uploadProductForm.controls['productFile'].valid
+            }"
+            (change)="checkFile($event)"
+            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              uploadProductForm.controls['productFile'].hasError('required') &&
+              !isValidForm
+            "
+          >
+            Please select file
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary me-2" *ngIf="!saveClicked">
+        <i class="feather icon-upload me-1"></i>&nbsp;Upload File
+      </button>
+      <button
+        class="btn rounded-pill btn-primary"
+        type="button"
+        *ngIf="saveClicked"
+        [disabled]="true"
+      >
+        <span
+          class="spinner-border"
+          style="width: 1rem; height: 1rem"
+          role="status"
+        >
+        </span
+        >&nbsp;Uploading...[Process may take few minute(s)]</button
+      >&nbsp;
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">
+       <i class="feather icon-x me-1"></i>Close
+      </button>
+    </div>
+  </form>
+</div>
+
