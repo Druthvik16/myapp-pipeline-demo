@@ -2,7 +2,7 @@
   <div class="row login-wrapper m-0">
     <div class="col-lg-6 p-0">
       <div class="login-img">
-        <img src="assets/img/authentication/authentication-01.svg" alt="img" />
+        <img src="assets/img/authentication/ganesh.png" alt="img" />
       </div>
     </div>
     <div class="col-lg-6 p-0">
@@ -10,14 +10,14 @@
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
           <div class="login-userset">
             <div class="login-logo logo-normal">
-              <img src="assets/img/logo-infomap.jpg" alt="img" />
+              <img src="assets/img/ganeshlogo.png" alt="img" />
             </div>
             <a [routerLink]="routes.index" class="login-logo logo-white">
               <img src="assets/img/logo-white.svg" alt="Img" />
             </a>
             <div class="login-userheading">
               <h3>Sign In</h3>
-              <h4>To Infomap using your Email and Password.</h4>
+              <h4>To Ganesh's website using your Email and Password.</h4>
             </div>
             <div class="mb-3">
               <label class="form-label">Email Address</label>
@@ -25,7 +25,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  placeholder="Email"
+                  placeholder="ganesh@infomapglobal.com"
                   formControlName="username"
                   [ngClass]="{
                     'is-invalid':
@@ -59,7 +59,7 @@
                 <input
                   [type]="password[1] ? 'text' : 'password'"
                   class="pass-input form-control"
-                  placeholder="Password"
+                  placeholder="Aster@123"
                   formControlName="password"
                   [ngClass]="{
                     'is-invalid':
@@ -102,7 +102,7 @@
               <div
                 class="my-4 d-flex justify-content-center align-items-center copyright-text"
               >
-                <p>Copyright &copy; 2025 Infomap</p>
+                <p>Copyright &copy; 2025 Ganesh</p>
               </div>
             </div>
           </div>
