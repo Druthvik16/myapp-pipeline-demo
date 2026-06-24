@@ -18,7 +18,7 @@ export class Signin2Component {
   public routes = routes;
   loginForm!: FormGroup;
   loginform = true;
-  isValidForm: boolean = true;
+  isValidForm: boolean = false;
   emailpattern =
     /^[a-zA-Z][a-zA-Z0-9._%+-]+@[a-zA-Z][a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   users = [{ email: 'admin@example.com', password: 'admin', role: 'Admin' }];
