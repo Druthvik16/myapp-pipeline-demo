@@ -1,16 +1,12 @@
 version: 0.2
 phases:
-  install:
-    runtime-versions:
-      nodejs: 18
-    commands:
-      - npm install -g @angular/cli
   pre_build:
     commands:
       - npm install --legacy-peer-deps
   build:
     commands:
-      - ng build --configuration production
+      - export NODE_OPTIONS=--max_old_space_size=4096
+      - npx ng build --configuration=production --source-map=false
   post_build:
     commands:
       - cp appspec.yml dist/template/browser/
