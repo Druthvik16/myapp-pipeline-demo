@@ -24,7 +24,7 @@ export class ClientListComponent {
   showFilter = false;
   dataSource!: MatTableDataSource<any>;
   public searchDataValue = '';
-  filterColumn: string = 10;
+  filterColumn: string = 'Name';
   filterColumnsList: any[] = ['Name', 'Short Name', 'Email'];
   private filteredClientData: Array<any> = [];
   private allClientData: Array<any> = [];
