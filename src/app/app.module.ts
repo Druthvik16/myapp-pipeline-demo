@@ -11,6 +11,9 @@ import { JwtInterceptor } from './core/interceptor/jwt/jwt.interceptor';
 import { ErrorInterceptor } from './core/interceptor/error/error.interceptor';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { provideLottieOptions } from 'ngx-lottie';
+import player from 'lottie-web';
+
 
 @NgModule({
   declarations: [AppComponent, LoaderComponent],
@@ -32,9 +35,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
       }
     }
   },
-   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-   { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-   { provide: LocationStrategy, useClass:HashLocationStrategy }
+    provideLottieOptions({
+     player: () => player
+   })
   ]
 })
 export class AppModule {}

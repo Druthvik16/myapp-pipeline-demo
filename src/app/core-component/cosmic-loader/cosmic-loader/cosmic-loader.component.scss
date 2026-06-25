@@ -1,0 +1,47 @@
+.wrapper {
+  height: 100vh;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  background: linear-gradient(135deg, #0f172a, #581c87, #ec4899);
+}
+
+.glass {
+  width: 500px;
+
+  padding: 40px;
+
+  border-radius: 30px;
+
+  backdrop-filter: blur(30px);
+
+  background: rgba(255, 255, 255, 0.1);
+
+  box-shadow: 0 0 100px rgba(236, 72, 153, 0.6);
+
+  text-align: center;
+
+  color: white;
+}
+
+button {
+  padding: 16px;
+
+  width: 100%;
+
+  border: none;
+
+  border-radius: 20px;
+
+  font-size: 18px;
+
+  background: linear-gradient(90deg, #06b6d4, #8b5cf6);
+
+  color: white;
+
+  cursor: pointer;
+}

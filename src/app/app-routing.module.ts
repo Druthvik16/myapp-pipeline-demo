@@ -18,7 +18,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./core-component/core-component.module').then(
         (m) => m.CoreComponentModule
-      ),canActivate: [AuthGuard],
+      )
   },
 
   {

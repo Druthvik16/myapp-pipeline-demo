@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-//   apiUrl : 'https://dev-sa.marketquest.in',
+  apiUrl : 'https://dev-sa.marketquest.in',
 //   apiUrl : 'https://demo.marketquest.in',
 //   apiUrl : 'https://marketquest.in',
-  apiUrl: 'https://qa-sa.marketquest.in'
+  // apiUrl: 'https://qa-sa.marketquest.in'
 };
 
 /*

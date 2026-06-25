@@ -29,6 +29,7 @@ const routes: Routes = [
       { path: 'layout-dark', loadChildren: () => import('./modal-dashboard/modal-dashboard.module').then(m => m.ModalDashboardModule) },
     ],
   },
+   {path: 'cosmic-loader', loadChildren:() => import('./cosmic-loader/cosmic-loader.module').then(m => m.CosmicLoaderModule)},
 ];
 
 @NgModule({
