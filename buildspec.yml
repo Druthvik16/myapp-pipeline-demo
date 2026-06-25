@@ -1,7 +1,4 @@
 version: 0.2
-cache:
-  paths:
-    - node_modules/**/*
 phases:
   pre_build:
     commands:
